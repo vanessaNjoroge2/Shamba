@@ -10,7 +10,7 @@ import styles from "./FarmDashboard.module.css";
 
 const HEALTH_CONFIG = {
   healthy: {
-    label: "Healthy",
+    label: "Good",
     Icon: Leaf,
     colorClass: styles.colorHealthy,
     bgClass: styles.bgHealthy,
@@ -21,7 +21,7 @@ const HEALTH_CONFIG = {
     desc: "Your crops show excellent chlorophyll absorption. Soil moisture is optimal for this stage of growth. Keep doing what you are doing!"
   },
   moderate: {
-    label: "Moderate Stress",
+    label: "Warning",
     Icon: ThermometerSun,
     colorClass: styles.colorModerate,
     bgClass: styles.bgModerate,
@@ -32,7 +32,7 @@ const HEALTH_CONFIG = {
     desc: "Your crops show signs of mild heat stress. Soil moisture is below the seasonal average for the region. Action recommended within 2 weeks."
   },
   dry: {
-    label: "Drought Risk",
+    label: "Critical",
     Icon: Flame,
     colorClass: styles.colorDry,
     bgClass: styles.bgDry,
@@ -57,8 +57,9 @@ export const FarmDashboard: React.FC = () => {
     setCurrentStepId(4);
   }, [setCurrentStepId]);
 
-  // Determine health status dynamically based on irrigation input
+  // Determine health status dynamically based on region / backend result
   const getHealthStatus = (): HealthStatus => {
+    if (farmInfo?.healthStatus) return farmInfo.healthStatus;
     if (farmInfo?.irrigation === "drip") return "healthy";
     if (farmInfo?.irrigation === "furrow" || farmInfo?.irrigation === "sprinkler") return "healthy";
     if (farmInfo?.irrigation === "rainfall") return "moderate";
@@ -78,6 +79,21 @@ export const FarmDashboard: React.FC = () => {
       : farmInfo.irrigation.charAt(0).toUpperCase() + farmInfo.irrigation.slice(1)
     : "Rainfall-fed";
 
+  const REGION_NAMES: Record<string, string> = {
+    nairobi: "Nairobi",
+    central: "Central Kenya",
+    rift: "Rift Valley",
+    western: "Western Kenya",
+    coast: "Coast",
+    eastern: "Eastern Kenya",
+  };
+  const regionId = farmInfo?.region || "central";
+  const rawRegionName = REGION_NAMES[regionId] || "Central Kenya";
+  const regionLabel = rawRegionName.includes("Kenya") ? rawRegionName : `${rawRegionName}, Kenya`;
+
+  const carbonValue = farmInfo?.carbonValue || 38;
+  const carbonGrade = farmInfo?.carbonGrade || "C";
+
   return (
     <div className={styles.page}>
       {/* Step tracker */}
@@ -93,7 +109,7 @@ export const FarmDashboard: React.FC = () => {
             </EyebrowPill>
             <h1 className={styles.title}>Farm Analysis</h1>
             <p className={styles.subtitle}>
-              {cropLabel} · {sizeLabel} · {irrigationLabel} · Murang'a, Kenya
+              {cropLabel} · {sizeLabel} · {irrigationLabel} · {regionLabel}
             </p>
           </div>
 
@@ -123,9 +139,6 @@ export const FarmDashboard: React.FC = () => {
               <div>
                 <div className={`${styles.healthLabel} ${cfg.colorClass}`}>
                   {cfg.label}
-                </div>
-                <div className={styles.healthMeta}>
-                  NDVI score: {cfg.ndvi} / 1.00
                 </div>
               </div>
             </div>
@@ -166,8 +179,8 @@ export const FarmDashboard: React.FC = () => {
               <p className={styles.calloutTitle}>Why this recommendation</p>
               <p className={styles.calloutDesc}>
                 {health === "healthy"
-                  ? "NDVI index is optimal (0.72). Regular nitrogen tracking shows stable absorption, but adding compost sustains organic micro-biome."
-                  : `Satellite imagery shows reduced leaf greenness (NDVI: ${cfg.ndvi} vs regional baseline 0.61). Nitrogen deficiency is the most likely cause given current rainfall patterns.`}
+                  ? "Vegetation health is optimal (72/100). Regular nitrogen tracking shows stable absorption, but adding compost sustains organic micro-biome."
+                  : `Satellite imagery shows reduced leaf greenness (health score: ${cfg.ndvi.replace("0.", "")}/100 vs regional baseline 61/100). Nitrogen deficiency is the most likely cause given current rainfall patterns.`}
               </p>
             </div>
 
@@ -201,29 +214,39 @@ export const FarmDashboard: React.FC = () => {
             </div>
             <div className={styles.carbonScoreBlock}>
               <div className={styles.carbonValueRow}>
-                <span className={styles.carbonValue}>38</span>
-                <span className={styles.carbonMax}>/ 100</span>
+                <span className={styles.carbonValue}>{carbonValue}</span>
+                <span className={styles.carbonUnit}>kg CO₂</span>
+                <span className={styles.carbonDivider}>|</span>
+                <span className={`${styles.carbonGradeBadge} ${
+                  carbonGrade === "A"
+                    ? styles.gradeA
+                    : carbonGrade === "B"
+                      ? styles.gradeB
+                      : styles.gradeC
+                }`}>
+                  Grade {carbonGrade}
+                </span>
               </div>
-              <p className={styles.carbonLabel}>Carbon Sequestration Score</p>
+              <p className={styles.carbonLabel}>Carbon Impact</p>
             </div>
 
             <div className={styles.carbonCallout}>
               <TreePine size={18} className={styles.treeIcon} />
               <p className={styles.carbonCalloutDesc}>
                 Your farm is sequestering carbon equivalent to{" "}
-                <strong>4.2 trees planted this year</strong> — below the potential of 11 trees for a healthy 1.5-acre plot.
+                <strong>{((carbonValue || 38) * 0.11).toFixed(1)} trees planted this year</strong> — below the potential of 11 trees for a healthy {sizeLabel} plot.
               </p>
             </div>
 
             <div className={styles.carbonProgressBarBg}>
               <div
                 className={styles.carbonProgressBarFill}
-                style={{ width: "38%" }}
+                style={{ width: `${Math.min((carbonValue / 200) * 100, 100)}%` }}
               />
             </div>
             <div className={styles.carbonProgressLabels}>
               <span>Low</span>
-              <span>Score: 38</span>
+              <span>Value: {carbonValue} kg CO₂</span>
               <span>High</span>
             </div>
 

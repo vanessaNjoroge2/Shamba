@@ -378,3 +378,49 @@
 .bgDryFill {
   background-color: var(--shamba-dry);
 }
+
+.carbonUnit {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--shamba-primary-dark-green);
+  margin-bottom: 0.25rem;
+}
+
+.carbonDivider {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--shamba-sage-border);
+  margin-bottom: 0.25rem;
+  padding: 0 0.25rem;
+}
+
+.carbonGradeBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  margin-bottom: 0.125rem;
+}
+
+.gradeA {
+  background-color: #D6F0E0;
+  color: var(--shamba-active-highlight-green);
+  border: 1.5px solid var(--shamba-active-highlight-green);
+}
+
+.gradeB {
+  background-color: var(--shamba-ochre-bg);
+  color: var(--shamba-moderate);
+  border: 1.5px solid var(--shamba-moderate);
+}
+
+.gradeC {
+  background-color: #FDEAE6;
+  color: var(--shamba-dry);
+  border: 1.5px solid var(--shamba-dry);
+}

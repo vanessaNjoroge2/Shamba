@@ -24,6 +24,12 @@ export interface User {
   email: string;
 }
 
+export interface SoilData {
+  n: number;
+  p: number;
+  k: number;
+}
+
 /**
  * Information entered by the farmer about their crops and setup.
  */
@@ -32,6 +38,11 @@ export interface FarmInfo {
   farmSize: string;
   sizeUnit: string;
   irrigation: string;
+  region: string;
+  soilData?: SoilData;
+  carbonValue?: number;
+  carbonGrade?: string;
+  healthStatus?: HealthStatus;
 }
 
 /**

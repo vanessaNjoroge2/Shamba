@@ -30,7 +30,7 @@ const TREND_DATA = [
  * TrackProgress component displays empty progress state or Recharts historical trends.
  */
 export const TrackProgress: React.FC = () => {
-  const { saved, user, setCurrentStepId } = useAppStore();
+  const { saved, user, setCurrentStepId, farmInfo } = useAppStore();
   const { currentStepId } = useStep();
   const navigate = useNavigate();
 
@@ -67,7 +67,20 @@ export const TrackProgress: React.FC = () => {
         {saved ? (
           <>
             <p className={styles.subtitle}>
-              Murang'a, Kenya · 6 visits since October 2023
+              {(() => {
+                const REGION_NAMES: Record<string, string> = {
+                  nairobi: "Nairobi",
+                  central: "Central Kenya",
+                  rift: "Rift Valley",
+                  western: "Western Kenya",
+                  coast: "Coast",
+                  eastern: "Eastern Kenya",
+                };
+                const regionId = farmInfo?.region || "central";
+                const rawRegionName = REGION_NAMES[regionId] || "Central Kenya";
+                const regionLabel = rawRegionName.includes("Kenya") ? rawRegionName : `${rawRegionName}, Kenya`;
+                return regionLabel;
+              })()} · 6 visits since October 2023
             </p>
 
             <div className={styles.chartCard}>
