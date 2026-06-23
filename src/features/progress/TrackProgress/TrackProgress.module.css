@@ -1,0 +1,228 @@
+.page {
+  min-height: 100vh;
+  background-color: var(--shamba-mint-bg);
+  font-family: var(--shamba-font-body);
+}
+
+.stepTrackerWrapper {
+  padding: 1.25rem 1.25rem 0 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .stepTrackerWrapper {
+    padding: 1.25rem 3rem 0 3rem;
+  }
+}
+
+.container {
+  padding: 2rem 1.25rem;
+  max-width: 64rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 2rem 3rem;
+  }
+}
+
+.navigationRow {
+  margin-bottom: 1.5rem;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--shamba-muted);
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s;
+  font-family: var(--shamba-font-body);
+}
+
+.backLink:hover {
+  opacity: 0.7;
+}
+
+.rotateBack {
+  transform: rotate(180deg);
+}
+
+.titleBlock {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  margin-top: 0.5rem;
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--shamba-primary-dark-green);
+  font-family: var(--shamba-font-display);
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--shamba-muted);
+  margin-top: -1rem;
+  margin-bottom: 2rem;
+}
+
+.chartCard {
+  border-radius: 1rem;
+  padding: 1.5rem;
+  background-color: var(--shamba-mint);
+  border: 1.5px solid var(--shamba-sage-border);
+  margin-bottom: 1.5rem;
+}
+
+.chartTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--shamba-primary-dark-green);
+  font-family: var(--shamba-font-display);
+  margin-bottom: 1.5rem;
+}
+
+.chartContainer {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .statsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.statCard {
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  background-color: var(--shamba-mint);
+  border: 1.5px solid var(--shamba-sage-border);
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--shamba-sage);
+}
+
+.statValue {
+  font-size: 1.875rem;
+  font-weight: 700;
+  font-family: var(--shamba-font-display);
+  margin-top: 0.25rem;
+}
+
+.statSub {
+  font-size: 0.75rem;
+  color: var(--shamba-muted);
+  margin-top: 0.25rem;
+}
+
+/* Empty State Card */
+.emptyStateCard {
+  border-radius: 1rem;
+  padding: 2.5rem 1.5rem;
+  background-color: var(--shamba-mint);
+  border: 1.5px dashed var(--shamba-sage-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.emptyIconBox {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--shamba-secondary);
+  margin-bottom: 1.25rem;
+}
+
+.emptyIcon {
+  color: var(--shamba-sage);
+}
+
+.emptyTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--shamba-primary-dark-green);
+  font-family: var(--shamba-font-display);
+}
+
+.emptyDesc {
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.625;
+  color: var(--shamba-muted);
+  max-width: 24rem;
+}
+
+.checklist {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  background-color: var(--shamba-secondary);
+  text-align: left;
+  max-width: 24rem;
+  width: 100%;
+}
+
+.checklistTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--shamba-primary-dark-green);
+  margin-bottom: 0.75rem;
+}
+
+.checklistItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.checkItem {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.875rem;
+  color: var(--shamba-charcoal);
+}
+
+.checkIcon {
+  color: var(--shamba-active-highlight-green);
+  flex-shrink: 0;
+}
+
+.emptyActions {
+  margin-top: 2rem;
+}
+
+/* Color classes for text highlighting */
+.colorHealthy {
+  color: var(--shamba-active-highlight-green);
+}
+
+.colorModerate {
+  color: var(--shamba-moderate);
+}
+
+.colorPrimary {
+  color: var(--shamba-primary-dark-green);
+}

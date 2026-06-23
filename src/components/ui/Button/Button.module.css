@@ -1,0 +1,52 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
+  min-height: 44px;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  font-family: var(--shamba-font-body);
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.primary {
+  background-color: var(--shamba-primary-dark-green);
+  color: var(--shamba-text-on-dark);
+}
+
+.accent {
+  background-color: var(--shamba-moderate); /* Ochre/Accent color */
+  color: var(--shamba-text-on-dark);
+}
+
+.ghost {
+  border-color: var(--shamba-sage-border);
+  color: var(--shamba-primary-dark-green);
+  background-color: transparent;
+}
+
+.ghost:hover {
+  background-color: var(--shamba-muted-inactive);
+}
+
+.fullWidth {
+  width: 100%;
+}

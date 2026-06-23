@@ -1,0 +1,373 @@
+.page {
+  min-height: 100vh;
+  background-color: var(--shamba-off-white);
+  font-family: var(--shamba-font-body);
+}
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background-color: var(--shamba-primary-dark-green);
+}
+
+@media (min-width: 1024px) {
+  .nav {
+    padding: 1rem 3rem;
+  }
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--shamba-font-display);
+  color: var(--shamba-mint);
+  letter-spacing: -0.01em;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.designSystemBtn,
+.loginBtn {
+  background-color: transparent;
+  color: var(--shamba-sage);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  min-height: 40px;
+  transition: color 0.2s;
+  font-family: var(--shamba-font-body);
+}
+
+.designSystemBtn:hover {
+  color: var(--shamba-mint);
+}
+
+.loginBtn {
+  font-size: 0.875rem;
+  color: var(--shamba-mint);
+  border: 1px solid rgba(163, 203, 176, 0.35);
+  padding: 0.625rem 1rem;
+}
+
+.loginBtn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.signUpBtn {
+  background-color: var(--shamba-moderate);
+  color: var(--shamba-text-on-dark);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.625rem 1.25rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  min-height: 40px;
+  transition: opacity 0.2s;
+  font-family: var(--shamba-font-body);
+}
+
+.signUpBtn:hover {
+  opacity: 0.9;
+}
+
+/* Hero */
+.heroSection {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 88vh;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .heroSection {
+    grid-template-columns: 1fr 1.15fr;
+  }
+}
+
+.heroTextCol {
+  padding: 3.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 10;
+}
+
+@media (min-width: 1024px) {
+  .heroTextCol {
+    padding: 6rem 4rem;
+  }
+}
+
+.heroTitle {
+  margin-top: 1.25rem;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--shamba-primary-dark-green);
+  font-family: var(--shamba-font-display);
+}
+
+@media (min-width: 1024px) {
+  .heroTitle {
+    font-size: 3.6rem;
+  }
+}
+
+.heroEm {
+  font-style: normal;
+  color: var(--shamba-moderate);
+}
+
+.heroDesc {
+  margin-top: 1.25rem;
+  font-size: 1.125rem;
+  line-height: 1.625;
+  color: var(--shamba-muted);
+  max-width: 26.25rem;
+}
+
+.heroButtons {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.heroFooterLabel {
+  margin-top: 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--shamba-sage);
+}
+
+.heroPhotoCol {
+  height: 18rem;
+  position: relative;
+  background-color: #2a4a20;
+}
+
+@media (min-width: 640px) {
+  .heroPhotoCol {
+    height: 24rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .heroPhotoCol {
+    height: 100%;
+  }
+}
+
+.heroImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.heroImgOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(22, 60, 45, 0.88) 0%, transparent 100%);
+}
+
+@media (min-width: 1024px) {
+  .heroImgOverlay {
+    /* Gradient fade on left edge for desktop text */
+    background: linear-gradient(to right, var(--shamba-off-white) 0%, transparent 10%),
+                linear-gradient(to top, rgba(22, 60, 45, 0.88) 0%, transparent 100%);
+  }
+}
+
+.quoteBlock {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .quoteBlock {
+    padding: 2rem;
+  }
+}
+
+.quoteText {
+  font-size: 1rem;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.35;
+  max-width: 20rem;
+  color: var(--shamba-mint);
+  font-family: var(--shamba-font-display);
+}
+
+.quoteAuthor {
+  margin-top: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--shamba-sage-border);
+}
+
+/* Journey section */
+.journeySection {
+  padding: 3.5rem 1.5rem;
+  background-color: var(--shamba-primary-dark-green);
+}
+
+.journeyContainer {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.journeyTitle {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--shamba-mint);
+  font-family: var(--shamba-font-display);
+}
+
+@media (min-width: 1024px) {
+  .journeyTitle {
+    font-size: 1.875rem;
+  }
+}
+
+.journeyStepsLabelRow {
+  display: none;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .journeyStepsLabelRow {
+    display: grid;
+  }
+}
+
+.journeyLabelCol {
+  text-align: center;
+}
+
+.journeyLabelText {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--shamba-sage);
+}
+
+/* How it works */
+.howItWorksSection {
+  padding: 3.5rem 1.5rem;
+  background-color: var(--shamba-secondary);
+}
+
+.howItWorksTitle {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--shamba-primary-dark-green);
+  font-family: var(--shamba-font-display);
+}
+
+@media (min-width: 1024px) {
+  .howItWorksTitle {
+    font-size: 1.875rem;
+  }
+}
+
+.numberedGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .numberedGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.howCallout {
+  margin-top: 1.5rem;
+}
+
+/* Social Proof */
+.socialProofSection {
+  padding: 3.5rem 1.5rem;
+  background-color: var(--shamba-primary-dark-green);
+  text-align: center;
+}
+
+.socialProofGrid {
+  max-width: 64rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .socialProofGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.statNumber {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--shamba-mint);
+  font-family: var(--shamba-font-display);
+}
+
+.statLabel {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--shamba-sage);
+}
+
+/* CTA */
+.ctaSection {
+  padding: 4rem 1.5rem;
+  text-align: center;
+  background-color: var(--shamba-off-white);
+}
+
+.ctaTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--shamba-primary-dark-green);
+  font-family: var(--shamba-font-display);
+}
+
+.ctaDesc {
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  color: var(--shamba-muted);
+}
+
+.ctaButtonWrapper {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}

@@ -1,0 +1,304 @@
+.page {
+  min-height: 100vh;
+  background-color: var(--shamba-mint-bg);
+  font-family: var(--shamba-font-body);
+}
+
+.stepTrackerWrapper {
+  padding: 1.25rem 1.25rem 0 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .stepTrackerWrapper {
+    padding: 1.25rem 3rem 0 3rem;
+  }
+}
+
+.container {
+  padding: 2rem 1.25rem;
+  max-width: 48rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 2rem 3rem;
+  }
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  margin-top: 0.75rem;
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--shamba-primary-dark-green);
+  font-family: var(--shamba-font-display);
+}
+
+.subtitle {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--shamba-muted);
+  line-height: 1.5;
+}
+
+.mobileStepProgress {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .mobileStepProgress {
+    display: none;
+  }
+}
+
+.progressDot {
+  height: 4px;
+  flex: 1;
+  border-radius: 9999px;
+  background-color: var(--shamba-sage-border);
+  transition: background-color 0.2s;
+}
+
+.progressDotActive {
+  background-color: var(--shamba-primary-dark-green);
+}
+
+.desktopFields {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .desktopFields {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+}
+
+.mobileFields {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .mobileFields {
+    display: none;
+  }
+}
+
+.mobileStepLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--shamba-sage);
+  margin-bottom: 1rem;
+}
+
+.fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.legend {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--shamba-primary-dark-green);
+}
+
+.cropGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .cropGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.cropButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  background-color: var(--shamba-mint);
+  color: var(--shamba-foreground);
+  border: 2px solid var(--shamba-sage-border);
+  min-height: 44px;
+  cursor: pointer;
+  font-family: var(--shamba-font-body);
+}
+
+.cropButton:hover {
+  opacity: 0.9;
+}
+
+.selectedBtn {
+  background-color: var(--shamba-primary-dark-green);
+  color: var(--shamba-mint);
+  border-color: var(--shamba-primary-dark-green);
+}
+
+.cropIcon {
+  color: var(--shamba-sage);
+}
+
+.selectedCropIcon {
+  color: var(--shamba-sage-border);
+}
+
+.sizeSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.sizeInputs {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.sizeInput {
+  flex: 1;
+  padding: 0 1rem;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  outline: none;
+  background-color: var(--shamba-mint);
+  border: 2px solid var(--shamba-sage-border);
+  color: var(--shamba-primary-dark-green);
+  min-height: 44px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: var(--shamba-font-body);
+}
+
+.sizeInput:focus {
+  border-color: var(--shamba-active-highlight-green);
+  box-shadow: 0 0 0 2px rgba(45, 122, 79, 0.15);
+}
+
+.unitToggle {
+  display: flex;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 2px solid var(--shamba-sage-border);
+}
+
+.unitButton {
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background-color 0.2s, color 0.2s;
+  background-color: var(--shamba-mint);
+  color: var(--shamba-muted);
+  border: none;
+  cursor: pointer;
+  min-height: 44px;
+  font-family: var(--shamba-font-body);
+}
+
+.unitActive {
+  background-color: var(--shamba-primary-dark-green);
+  color: var(--shamba-mint);
+}
+
+.helperText {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--shamba-sage);
+}
+
+.irrigationGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .irrigationGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.irrigationButton {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  text-align: left;
+  transition: all 0.2s ease-in-out;
+  background-color: var(--shamba-mint);
+  border: 2px solid var(--shamba-sage-border);
+  min-height: 44px;
+  cursor: pointer;
+  font-family: var(--shamba-font-body);
+}
+
+.irrigationButton:hover {
+  opacity: 0.9;
+}
+
+.selectedIrrigation {
+  background-color: var(--shamba-primary-dark-green);
+  border-color: var(--shamba-primary-dark-green);
+}
+
+.irrigationIcon {
+  color: var(--shamba-sage);
+  flex-shrink: 0;
+}
+
+.selectedIrrigationIcon {
+  color: var(--shamba-sage-border);
+}
+
+.irrigationLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--shamba-primary-dark-green);
+}
+
+.selectedText {
+  color: var(--shamba-mint);
+}
+
+.irrigationDesc {
+  font-size: 0.75rem;
+  margin-top: 0.125rem;
+  color: var(--shamba-muted);
+}
+
+.selectedDescText {
+  color: var(--shamba-sage-border);
+}
+
+.submitBtnWrapper {
+  margin-top: 0.5rem;
+}
+
+.mobileNavButtons {
+  margin-top: 2rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.calloutWrapper {
+  margin-top: 2rem;
+}

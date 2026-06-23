@@ -1,0 +1,164 @@
+.page {
+  min-height: 100vh;
+  background-color: var(--shamba-mint-bg);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--shamba-font-body);
+}
+
+.stepTrackerWrapper {
+  padding: 1.25rem 1.25rem 0 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .stepTrackerWrapper {
+    padding: 1.25rem 3rem 0 3rem;
+  }
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.25rem;
+  text-align: center;
+  max-width: 32rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.iconContainer {
+  position: relative;
+  width: 7rem;
+  height: 7rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--shamba-mint);
+  border: 2px solid var(--shamba-sage-border);
+  margin-bottom: 2rem;
+}
+
+.leafIcon {
+  color: var(--shamba-primary-dark-green);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.orbitDot {
+  position: absolute;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+  top: 50%;
+  left: 50%;
+  margin-top: -0.375rem;
+  margin-left: -0.375rem;
+}
+
+.orbitDot-0 {
+  background-color: var(--shamba-primary-dark-green);
+  animation: spin0 2.4s linear infinite;
+}
+
+.orbitDot-1 {
+  background-color: var(--shamba-moderate);
+  animation: spin1 2.4s linear infinite;
+}
+
+.orbitDot-2 {
+  background-color: var(--shamba-sage);
+  animation: spin2 2.4s linear infinite;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  margin-top: 1rem;
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--shamba-primary-dark-green);
+  font-family: var(--shamba-font-display);
+}
+
+.phaseText {
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  height: 1.5rem;
+  color: var(--shamba-muted);
+  transition: all 0.5s ease-in-out;
+}
+
+.progressBarWrapper {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.progressBar {
+  width: 100%;
+  background-color: var(--shamba-muted-inactive);
+  height: 8px;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 9999px;
+  background-color: var(--shamba-primary-dark-green);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progressPercentage {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--shamba-sage);
+  font-variant-numeric: tabular-nums;
+}
+
+.calloutWrapper {
+  width: 100%;
+}
+
+/* Spin animations for orbiting dots at offset rotations */
+@keyframes spin0 {
+  from {
+    transform: rotate(0deg) translateX(56px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(56px) rotate(-360deg);
+  }
+}
+
+@keyframes spin1 {
+  from {
+    transform: rotate(120deg) translateX(56px) rotate(-120deg);
+  }
+  to {
+    transform: rotate(480deg) translateX(56px) rotate(-480deg);
+  }
+}
+
+@keyframes spin2 {
+  from {
+    transform: rotate(240deg) translateX(56px) rotate(-240deg);
+  }
+  to {
+    transform: rotate(60deg) translateX(56px) rotate(-60deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: .5;
+    transform: scale(0.95);
+  }
+}

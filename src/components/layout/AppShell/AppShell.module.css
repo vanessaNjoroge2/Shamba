@@ -1,0 +1,76 @@
+.appShell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  width: 100%;
+  background-color: var(--shamba-primary-dark-green);
+  padding: 1rem 1.5rem;
+}
+
+.navContainer {
+  max-width: 80rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logoLink {
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.logoLink:hover {
+  opacity: 0.8;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--shamba-font-display);
+  color: var(--shamba-mint);
+  letter-spacing: -0.01em;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navButton {
+  background-color: transparent;
+  color: var(--shamba-sage-border);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  min-height: 40px;
+  transition: all 0.2s;
+  font-family: var(--shamba-font-body);
+}
+
+.navButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--shamba-text-on-dark);
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+  .navbar {
+    padding: 1rem 3rem;
+  }
+}
