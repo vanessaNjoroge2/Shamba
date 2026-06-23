@@ -18,19 +18,13 @@ class Token(BaseModel):
 # ── Farm assessment ────────────────────────────────────────────────────────────
 
 class FarmInput(BaseModel):
-    # 7 Kaggle columns — Virginia's model features
-    N:           float = Field(description="Nitrogen level (kg/ha)")
-    P:           float = Field(description="Phosphorus level (kg/ha)")
-    K:           float = Field(description="Potassium level (kg/ha)")
-    temperature: float = Field(description="Temperature in °C")
-    humidity:    float = Field(description="Relative humidity %")
-    ph:          float = Field(description="Soil pH")
-    rainfall:    float = Field(description="Rainfall in mm")
+    # Region dropdown — backend resolves to soil/climate values silently
+    region: str = Field(description="One of: Nairobi, Central Kenya, Rift Valley, Western Kenya, Coast, Eastern Kenya")
 
-    # 3 extra context fields (encoded + sent to model)
-    crop_type:        str   = Field(description="One of: maize, beans, wheat, rice, sorghum, cassava, potato, tomato, coffee, tea")
-    irrigation_level: str   = Field(description="low / medium / high")
-    soil_moisture:    str   = Field(description="dry / moderate / wet")
+    # Crop context fields
+    crop_type:        str = Field(description="One of: maize, beans, wheat, rice, sorghum, cassava, potato, tomato, coffee, tea")
+    irrigation_level: str = Field(description="low / medium / high")
+    soil_moisture:    str = Field(description="dry / moderate / wet")
 
     # Carbon formula inputs
     farm_size_acres:    float = Field(description="Farm size in acres")

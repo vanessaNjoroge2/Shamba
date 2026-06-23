@@ -1,6 +1,4 @@
 """
-ai_logic.py — Shamba Backend
-Wraps Virginia's farm_health_model.pkl, carbon formula, and LLM recommendations.
 
 Model takes 10 features (confirmed from model_info.json):
   N, P, K, temperature, humidity, ph, rainfall,
@@ -31,6 +29,31 @@ HEALTH_LABEL_MAP = {v: k for k, v in HEALTH_STATUS_MAP.items()}
 
 # ── Allowed crop list — frontend dropdown must match this exactly ──────────────
 ALLOWED_CROPS = list(CROP_TYPE_MAP.keys())
+
+# ── Region defaults (farmer never sees these — backend fills them in silently) ─
+REGION_DEFAULTS = {
+    "nairobi":       {"N": 50, "P": 40, "K": 40, "temperature": 18, "humidity": 65, "ph": 6.2, "rainfall": 120},
+    "central kenya": {"N": 80, "P": 55, "K": 45, "temperature": 17, "humidity": 75, "ph": 6.5, "rainfall": 180},
+    "rift valley":   {"N": 90, "P": 60, "K": 50, "temperature": 16, "humidity": 70, "ph": 6.8, "rainfall": 160},
+    "western kenya": {"N": 85, "P": 50, "K": 48, "temperature": 22, "humidity": 80, "ph": 6.0, "rainfall": 200},
+    "coast":         {"N": 45, "P": 35, "K": 38, "temperature": 28, "humidity": 85, "ph": 5.8, "rainfall": 150},
+    "eastern kenya": {"N": 40, "P": 30, "K": 35, "temperature": 24, "humidity": 55, "ph": 5.5, "rainfall":  80},
+}
+
+ALLOWED_REGIONS = list(REGION_DEFAULTS.keys())
+
+
+def resolve_region(region: str) -> dict:
+    """Looks up soil/climate defaults for a region name.
+    Case-insensitive. Raises ValueError for unknown regions."""
+    key = region.strip().lower()
+    if key not in REGION_DEFAULTS:
+        raise ValueError(
+            f"Region '{region}' is not supported. "
+            f"Allowed regions: {', '.join(r.title() for r in ALLOWED_REGIONS)}"
+        )
+    return REGION_DEFAULTS[key]
+
 
 # ── Load model ─────────────────────────────────────────────────────────────────
 _model = None
