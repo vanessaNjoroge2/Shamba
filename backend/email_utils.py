@@ -14,6 +14,9 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+from dotenv import load_dotenv
+load_dotenv()
+
 
 def send_otp_email(to_email: str, otp_code: str, farmer_name: str) -> bool:
     """Sends a 6-digit OTP to the farmer's email.
