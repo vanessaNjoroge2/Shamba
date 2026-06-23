@@ -52,3 +52,14 @@ class FarmHistoryItem(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# ── OTP ────────────────────────────────────────────────────────────────────────
+
+class OTPVerify(BaseModel):
+    email: EmailStr
+    code: str = Field(min_length=6, max_length=6)
+
+
+class MessageResponse(BaseModel):
+    message: str

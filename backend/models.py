@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -11,11 +11,22 @@ class User(Base):
     name            = Column(String, nullable=False)
     email           = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
+    is_verified     = Column(Boolean, default=False)   # False until OTP confirmed
     created_at      = Column(DateTime, default=datetime.utcnow)
 
     assessments = relationship(
         "Assessment", back_populates="farmer", cascade="all, delete-orphan"
     )
+
+
+class OTPCode(Base):
+    __tablename__ = "otp_codes"
+
+    id         = Column(Integer, primary_key=True, index=True)
+    email      = Column(String, index=True, nullable=False)
+    code       = Column(String, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    used       = Column(Boolean, default=False)
 
 
 class Assessment(Base):
