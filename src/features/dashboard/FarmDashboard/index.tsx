@@ -232,9 +232,9 @@ export const FarmDashboard: React.FC = () => {
               />
             </div>
             <div className={styles.progressLabels}>
-              <span>Critical</span>
-              <span>{cfg.label}</span>
-              <span>Excellent</span>
+              <span className={styles.colorDry}>Critical</span>
+              <span className={styles.colorModerate}>Good</span>
+              <span className={styles.colorHealthy}>Excellent</span>
             </div>
           </div>
 
