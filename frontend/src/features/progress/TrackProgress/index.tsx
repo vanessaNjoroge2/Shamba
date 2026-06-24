@@ -58,13 +58,17 @@ export const TrackProgress: React.FC = () => {
   const apiTrendData = [...history]
     .reverse()
     .map((item) => ({
-      visit: new Date(item.timestamp).toLocaleDateString(undefined, {
-        month: "short",
-        year: "2-digit",
-      }),
+      visit: (() => {
+        const d = new Date(item.timestamp);
+        const day = d.getDate();
+        const month = d.toLocaleDateString(undefined, { month: "short" });
+        const year = d.getFullYear().toString().slice(-2);
+        return `${day} ${month} '${year}`;
+      })(),
       health: HEALTH_SCORE[item.health_status] ?? 50,
       carbon: item.carbon_estimate,
     }));
+
 
   const hasApiHistory = apiTrendData.length > 0;
   const chartData = hasApiHistory ? apiTrendData : TREND_DATA;
@@ -180,21 +184,28 @@ export const TrackProgress: React.FC = () => {
                     const healths = chartData.map((d) => d.health);
                     const carbons = chartData.map((d) => d.carbon);
                     const bestHealth = Math.max(...healths);
-                    const bestCarbon = Math.max(...carbons);
-                    const first = healths[0];
-                    const last = healths[healths.length - 1];
-                    const improvement =
-                      first > 0 ? Math.round(((last - first) / first) * 100) : 0;
+                    const bestCarbon = Math.min(...carbons);
+                    
+                    const firstHealth = healths[0];
+                    const lastHealth = healths[healths.length - 1];
+                    const healthChange = firstHealth > 0 ? Math.round(((lastHealth - firstHealth) / firstHealth) * 100) : 0;
+                    
+                    const firstCarbon = carbons[0];
+                    const lastCarbon = carbons[carbons.length - 1];
+                    const carbonChange = firstCarbon > 0 ? Math.round(((lastCarbon - firstCarbon) / firstCarbon) * 100) : 0;
+                    
                     return [
                       { label: "Best Health Score", value: String(bestHealth), sub: "Across your visits", colorClass: styles.colorHealthy },
-                      { label: "Best Carbon Score", value: String(bestCarbon), sub: "kg CO2", colorClass: styles.colorModerate },
-                      { label: "Total Change", value: `${improvement >= 0 ? "+" : ""}${improvement}%`, sub: "Since first visit", colorClass: styles.colorPrimary },
+                      { label: "Health Change", value: `${healthChange >= 0 ? "+" : ""}${healthChange}%`, sub: "Since first visit", colorClass: styles.colorHealthy },
+                      { label: "Best Carbon Score", value: String(bestCarbon), sub: "kg CO2 (lowest)", colorClass: styles.colorModerate },
+                      { label: "Carbon Change", value: `${carbonChange >= 0 ? "+" : ""}${carbonChange}%`, sub: "Since first visit", colorClass: styles.colorModerate },
                     ];
                   })()
                 : [
                     { label: "Best Health Score", value: "80", sub: "August 2024", colorClass: styles.colorHealthy },
-                    { label: "Best Carbon Score", value: "41", sub: "June 2024", colorClass: styles.colorModerate },
-                    { label: "Total Improvement", value: "+23%", sub: "Since first visit", colorClass: styles.colorPrimary },
+                    { label: "Health Change", value: "+23%", sub: "Since first visit", colorClass: styles.colorHealthy },
+                    { label: "Best Carbon Score", value: "29", sub: "kg CO2 (Feb 2024)", colorClass: styles.colorModerate },
+                    { label: "Carbon Change", value: "+27%", sub: "Since first visit", colorClass: styles.colorModerate },
                   ]
               ).map(({ label, value, sub, colorClass }) => (
                 <div key={label} className={styles.statCard}>
