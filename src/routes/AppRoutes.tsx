@@ -5,6 +5,8 @@ import { AppShell } from "../components/layout";
 import {
   LandingPage,
   LoginPage,
+  SignupPage,
+  ForgotPasswordPage,
   OtpPage,
   OnboardingPage,
   AnalysisPage,
@@ -23,6 +25,8 @@ export const AppRoutes: React.FC = () => {
       {/* Public Pages */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/forgot" element={<ForgotPasswordPage />} />
       <Route path="/otp" element={<OtpPage />} />
 
       {/* Protected Pages - Wrapped with AppShell and Auth Guard */}

@@ -1,0 +1,120 @@
+.soilGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.soilCard {
+  background-color: var(--shamba-mint-bg);
+  border: 2px solid var(--shamba-sage-border);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: pointer;
+  font-family: var(--shamba-font-body);
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+.soilCard:hover {
+  border-color: var(--shamba-active-highlight-green);
+}
+
+.soilCardActive {
+  border-color: var(--shamba-active-highlight-green);
+  box-shadow: 0 0 0 2px rgba(45, 122, 79, 0.15);
+}
+
+.soilLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--shamba-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.soilValue {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--shamba-primary-dark-green);
+  font-family: var(--shamba-font-body);
+}
+
+.whyHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--shamba-active-highlight-green);
+}
+
+.explainPanel {
+  margin-top: 0.5rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  background-color: var(--shamba-mint);
+  border: 1px solid var(--shamba-sage-border);
+}
+
+.explainHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.explainIcon {
+  color: var(--shamba-active-highlight-green);
+  flex-shrink: 0;
+}
+
+.explainTitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--shamba-primary-dark-green);
+}
+
+.levelBadge {
+  margin-left: auto;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.levelOk {
+  background-color: rgba(45, 122, 79, 0.15);
+  color: var(--shamba-active-highlight-green);
+}
+
+.levelLow {
+  background-color: rgba(196, 75, 43, 0.12);
+  color: var(--shamba-dry);
+}
+
+.levelHigh {
+  background-color: rgba(200, 130, 62, 0.15);
+  color: var(--shamba-moderate);
+}
+
+.explainText {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--shamba-muted);
+  margin-bottom: 0.4rem;
+}
+
+.explainReading {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--shamba-primary-dark-green);
+  margin-bottom: 0.4rem;
+}

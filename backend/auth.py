@@ -1,10 +1,10 @@
 import os
 from datetime import datetime, timedelta
 
+import bcrypt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
 import models
@@ -16,16 +16,20 @@ SECRET_KEY = os.getenv("SECRET_KEY", "hackathon-temporary-secret-change-me")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24h — generous so tokens don't expire mid-demo
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 
+# bcrypt only hashes the first 72 bytes; we truncate explicitly so long inputs
+# don't raise. (We call bcrypt directly because passlib 1.7.4 is incompatible
+# with modern bcrypt releases on Python 3.13.)
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    pw = password.encode("utf-8")[:72]
+    return bcrypt.hashpw(pw, bcrypt.gensalt()).decode("utf-8")
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    pw = plain_password.encode("utf-8")[:72]
+    return bcrypt.checkpw(pw, hashed_password.encode("utf-8"))
 
 
 def create_access_token(data: dict) -> str:

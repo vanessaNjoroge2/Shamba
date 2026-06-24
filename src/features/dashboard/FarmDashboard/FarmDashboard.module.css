@@ -424,3 +424,35 @@
   color: var(--shamba-dry);
   border: 1.5px solid var(--shamba-dry);
 }
+
+/* Empty state shown when the user reaches the dashboard with no assessment */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 60vh;
+  padding: 2rem 1.25rem;
+  text-align: center;
+}
+
+.emptyTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--shamba-primary-dark-green);
+  font-family: var(--shamba-font-display);
+}
+
+.emptyLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--shamba-active-highlight-green);
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+}

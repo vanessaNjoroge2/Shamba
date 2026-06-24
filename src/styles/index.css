@@ -1,4 +1,6 @@
-@import './tokens.css';
+/* fonts.css holds an external `@import url(...)` for Google Fonts, which must
+   come before any other CSS rule, so it is loaded first. */
 @import './fonts.css';
+@import './tokens.css';
 @import './tailwind.css';
 @import './theme.css';

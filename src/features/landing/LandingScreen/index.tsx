@@ -48,7 +48,7 @@ export const LandingScreen: React.FC = () => {
                 Log In
               </button>
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/signup")}
                 className={styles.signUpBtn}
                 aria-label="Sign up for free account"
               >
@@ -69,7 +69,7 @@ export const LandingScreen: React.FC = () => {
             Farming <em className={styles.heroEm}>in the Dark</em>?
           </h1>
           <p className={styles.heroDesc}>
-            Smallholder farmers manage 80% of Africa's food supply — yet most
+            Smallholder farmers manage 80% of Africa's food supply - yet most
             lack access to soil data, weather insights, or carbon credits.
             Shamba changes that. No app download. Just answers.
           </p>
@@ -77,7 +77,7 @@ export const LandingScreen: React.FC = () => {
             <Button onClick={handleStart} variant="primary">
               Analyze My Farm <ArrowRight size={17} />
             </Button>
-            <Button onClick={() => navigate("/login")} variant="ghost">
+            <Button onClick={() => navigate("/signup")} variant="ghost">
               Create Free Account
             </Button>
           </div>
@@ -98,7 +98,7 @@ export const LandingScreen: React.FC = () => {
               "Now I know exactly what my soil needs, before the season starts."
             </p>
             <p className={styles.quoteAuthor}>
-              — James M., Smallholder farmer, Murang'a
+              - James M., Smallholder farmer, Murang'a
             </p>
           </div>
         </div>
@@ -140,7 +140,7 @@ export const LandingScreen: React.FC = () => {
             <NumberedCard
               number={2}
               title="AI Assessment"
-              description="Our model cross-references satellite NDVI, soil moisture indices, and 30-day rainfall data for your exact GPS location."
+              description="Our model cross-references satellite imagery, soil moisture indices, and 30-day rainfall data for your exact GPS location."
             />
             <NumberedCard
               number={3}
@@ -163,7 +163,7 @@ export const LandingScreen: React.FC = () => {
         <div className={styles.socialProofGrid}>
           {[
             { stat: "14,200+", label: "Farmers analyzed" },
-            { stat: "3 countries", label: "Kenya · Uganda · Tanzania" },
+            { stat: "47 counties", label: "Across Kenya" },
             { stat: "Avg. 23%", label: "Yield improvement reported" },
           ].map(({ stat, label }) => (
             <div key={stat}>
@@ -186,7 +186,7 @@ export const LandingScreen: React.FC = () => {
         </p>
         <div className={styles.ctaButtonWrapper}>
           <Button onClick={handleStart} variant="accent">
-            Get My Farm Report — Free <ArrowRight size={17} />
+            Get My Farm Report - Free <ArrowRight size={17} />
           </Button>
         </div>
       </section>

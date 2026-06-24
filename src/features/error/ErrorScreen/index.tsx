@@ -35,7 +35,7 @@ export const ErrorScreen: React.FC = () => {
             <p className={styles.calloutTitle}>Your data is safe</p>
           </div>
           <p className={styles.calloutDesc}>
-            Everything you entered — crop type, farm size, and irrigation method — is saved in your browser. You won't need to re-enter it when you reconnect.
+            Everything you entered - crop type, farm size, and irrigation method - is saved in your browser. You won't need to re-enter it when you reconnect.
           </p>
         </div>
 

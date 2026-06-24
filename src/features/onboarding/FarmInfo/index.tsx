@@ -3,8 +3,9 @@ import { useNavigate } from "react-router";
 import { Wheat, Sprout, Leaf, CloudRain, Droplets, Activity, Info, MapPin, ArrowRight, Coffee } from "lucide-react";
 import { useAppStore } from "../../../store";
 import { useStep } from "../../../hooks";
-import { Button, EyebrowPill, InfoCallout } from "../../../components/ui";
+import { Button, EyebrowPill, InfoCallout, RegionSelect } from "../../../components/ui";
 import { StepBar } from "../../../components/shared";
+import { SoilMetrics } from "./SoilMetrics";
 import styles from "./FarmInfo.module.css";
 
 const CROPS = [
@@ -114,11 +115,20 @@ const REGION_DATA: Record<string, RegionInfo> = {
   },
 };
 
+const REGIONS = [
+  { value: "nairobi", label: "Nairobi" },
+  { value: "central", label: "Central Kenya" },
+  { value: "rift", label: "Rift Valley" },
+  { value: "western", label: "Western Kenya" },
+  { value: "coast", label: "Coast" },
+  { value: "eastern", label: "Eastern Kenya" },
+];
+
 /**
  * FarmInfo component captures farm statistics during onboarding.
  */
 export const FarmInfo: React.FC = () => {
-  const { farmInfo, saveFarmInfo, setCurrentStepId } = useAppStore();
+  const { farmInfo, saveFarmInfo, runAssessment, setCurrentStepId } = useAppStore();
   const { currentStepId } = useStep();
   const navigate = useNavigate();
 
@@ -159,7 +169,7 @@ export const FarmInfo: React.FC = () => {
   const handleSubmit = () => {
     if (!region) return;
     const info = REGION_DATA[region];
-    saveFarmInfo({
+    const farmData = {
       cropType,
       farmSize,
       sizeUnit,
@@ -169,8 +179,13 @@ export const FarmInfo: React.FC = () => {
       healthStatus: info?.healthStatus || "moderate",
       carbonValue: info?.carbonValue || 38,
       carbonGrade: info?.carbonGrade || "C",
-    });
+    };
+    // Persist inputs immediately so the dashboard always has data, then move to
+    // the loading screen and run the real backend assessment in the background.
+    saveFarmInfo(farmData);
+    setCurrentStepId(3);
     navigate("/analysis");
+    runAssessment(farmData);
   };
 
   const handleMobileNext = () => {
@@ -249,21 +264,14 @@ export const FarmInfo: React.FC = () => {
             <label htmlFor="farm-region" className={styles.legend}>
               Where is your farm located?
             </label>
-            <select
+            <RegionSelect
               id="farm-region"
               value={region}
-              onChange={(e) => setRegion(e.target.value)}
-              className={styles.regionSelect}
-              required
-            >
-              <option value="" disabled>Select your farm region</option>
-              <option value="nairobi">Nairobi</option>
-              <option value="central">Central Kenya</option>
-              <option value="rift">Rift Valley</option>
-              <option value="western">Western Kenya</option>
-              <option value="coast">Coast</option>
-              <option value="eastern">Eastern Kenya</option>
-            </select>
+              onChange={setRegion}
+              options={REGIONS}
+              placeholder="Select your farm region"
+              ariaLabel="Farm region"
+            />
             <p className={styles.helperText}>
               Select your farm region to automatically use regional soil data.
             </p>
@@ -277,20 +285,7 @@ export const FarmInfo: React.FC = () => {
                   <span>Fetching soil data from regional database...</span>
                 </div>
               ) : soilData ? (
-                <div className={styles.soilGrid}>
-                  <div className={styles.soilCard}>
-                    <span className={styles.soilLabel}>Nitrogen (N)</span>
-                    <span className={styles.soilValue}>{soilData.n} mg/kg</span>
-                  </div>
-                  <div className={styles.soilCard}>
-                    <span className={styles.soilLabel}>Phosphorus (P)</span>
-                    <span className={styles.soilValue}>{soilData.p} mg/kg</span>
-                  </div>
-                  <div className={styles.soilCard}>
-                    <span className={styles.soilLabel}>Potassium (K)</span>
-                    <span className={styles.soilValue}>{soilData.k} mg/kg</span>
-                  </div>
-                </div>
+                <SoilMetrics soilData={soilData} />
               ) : (
                 <div className={styles.soilPlaceholder}>
                   Select region to automatically load soil data
@@ -379,7 +374,7 @@ export const FarmInfo: React.FC = () => {
         <div className={styles.mobileFields}>
           {mobileStep === 1 && (
             <div>
-              <p className={styles.mobileStepLabel}>1 of 4 — Crop Type</p>
+              <p className={styles.mobileStepLabel}>1 of 4 - Crop Type</p>
               <fieldset className={styles.fieldset}>
                 <legend className={styles.legend}>What is your primary crop?</legend>
                 <div className={styles.cropGrid}>
@@ -408,24 +403,17 @@ export const FarmInfo: React.FC = () => {
 
           {mobileStep === 2 && (
             <div>
-              <p className={styles.mobileStepLabel}>2 of 4 — Farm Region</p>
+              <p className={styles.mobileStepLabel}>2 of 4 - Farm Region</p>
               <fieldset className={styles.fieldset}>
                 <legend className={styles.legend}>Where is your farm located?</legend>
-                <select
+                <RegionSelect
                   id="mobile-farm-region"
                   value={region}
-                  onChange={(e) => setRegion(e.target.value)}
-                  className={styles.regionSelect}
-                  required
-                >
-                  <option value="" disabled>Select your farm region</option>
-                  <option value="nairobi">Nairobi</option>
-                  <option value="central">Central Kenya</option>
-                  <option value="rift">Rift Valley</option>
-                  <option value="western">Western Kenya</option>
-                  <option value="coast">Coast</option>
-                  <option value="eastern">Eastern Kenya</option>
-                </select>
+                  onChange={setRegion}
+                  options={REGIONS}
+                  placeholder="Select your farm region"
+                  ariaLabel="Farm region"
+                />
                 <p className={styles.helperText}>
                   Select your farm region to automatically use regional soil data.
                 </p>
@@ -439,20 +427,7 @@ export const FarmInfo: React.FC = () => {
                       <span>Fetching soil data...</span>
                     </div>
                   ) : soilData ? (
-                    <div className={styles.soilGrid}>
-                      <div className={styles.soilCard}>
-                        <span className={styles.soilLabel}>Nitrogen (N)</span>
-                        <span className={styles.soilValue}>{soilData.n} mg/kg</span>
-                      </div>
-                      <div className={styles.soilCard}>
-                        <span className={styles.soilLabel}>Phosphorus (P)</span>
-                        <span className={styles.soilValue}>{soilData.p} mg/kg</span>
-                      </div>
-                      <div className={styles.soilCard}>
-                        <span className={styles.soilLabel}>Potassium (K)</span>
-                        <span className={styles.soilValue}>{soilData.k} mg/kg</span>
-                      </div>
-                    </div>
+                    <SoilMetrics soilData={soilData} />
                   ) : (
                     <div className={styles.soilPlaceholder}>
                       Select region to automatically load soil data
@@ -465,7 +440,7 @@ export const FarmInfo: React.FC = () => {
 
           {mobileStep === 3 && (
             <div>
-              <p className={styles.mobileStepLabel}>3 of 4 — Farm Size</p>
+              <p className={styles.mobileStepLabel}>3 of 4 - Farm Size</p>
               <div className={styles.sizeSection}>
                 <label htmlFor="mobile-farm-size" className={styles.legend}>
                   How large is your farm?
@@ -506,7 +481,7 @@ export const FarmInfo: React.FC = () => {
 
           {mobileStep === 4 && (
             <div>
-              <p className={styles.mobileStepLabel}>4 of 4 — Irrigation Method</p>
+              <p className={styles.mobileStepLabel}>4 of 4 - Irrigation Method</p>
               <fieldset className={styles.fieldset}>
                 <legend className={styles.legend}>How do you water your crops?</legend>
                 <div className={styles.irrigationGrid}>
