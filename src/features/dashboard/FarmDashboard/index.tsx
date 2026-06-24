@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { Leaf, ThermometerSun, Flame, BarChart2, User, TrendingUp, ArrowRight, TreePine, Award } from "lucide-react";
+import { Leaf, ThermometerSun, Flame, BarChart2, User, TrendingUp, ArrowRight, TreePine, Award, Download } from "lucide-react";
 import { useAppStore } from "../../../store";
 import { useStep } from "../../../hooks";
 import { EyebrowPill, InfoCallout } from "../../../components/ui";
-import { StepBar } from "../../../components/shared";
+import { StepBar, PrintableReport } from "../../../components/shared";
 import { HealthStatus } from "../../../types";
 import styles from "./FarmDashboard.module.css";
 
@@ -45,7 +45,7 @@ const HEALTH_CONFIG = {
  * FarmDashboard component displaying AI insights on soil, health, and carbon.
  */
 export const FarmDashboard: React.FC = () => {
-  const { farmInfo, setCurrentStepId, saved } = useAppStore();
+  const { farmInfo, setCurrentStepId, saved, addSavedReport } = useAppStore();
   const { currentStepId } = useStep();
   const navigate = useNavigate();
 
@@ -62,9 +62,16 @@ export const FarmDashboard: React.FC = () => {
           <StepBar />
         </div>
         <div className={styles.emptyState}>
-          <p className={styles.emptyTitle}>No assessment yet.</p>
-          <button onClick={() => navigate("/onboarding")} className={styles.emptyLink}>
-            Analyse your farm <ArrowRight size={15} />
+          <div className={styles.emptyIcon}>
+            <Leaf size={32} />
+          </div>
+          <p className={styles.emptyTitle}>No farm analysis yet</p>
+          <p className={styles.emptyText}>
+            Tell us about your farm and we'll show your health, carbon, and
+            tailored recommendations.
+          </p>
+          <button onClick={() => navigate("/onboarding")} className={styles.emptyButton}>
+            Analyse your farm <ArrowRight size={16} />
           </button>
         </div>
       </div>
@@ -131,7 +138,32 @@ export const FarmDashboard: React.FC = () => {
     ? new Date(farmInfo.assessment_timestamp).toLocaleDateString()
     : null;
 
+  // The 3 recommendations shown on screen and in the PDF (real or fallback).
+  const recommendations =
+    apiRecommendations && apiRecommendations.length > 0
+      ? apiRecommendations
+      : health === "healthy"
+      ? [
+          "Continue crop monitoring every 2 weeks",
+          "Add compost or leaf mold to topsoil",
+          "Avoid over-watering in low-lying quadrants",
+        ]
+      : [
+          "Use 50 kg CAN per acre, applied at base of plants",
+          "Add 5 cm organic mulch layer to retain moisture",
+          "Avoid irrigation during hottest part of day (11am to 3pm)",
+        ];
+
+  // No jsPDF in the project, so we use the browser's print-to-PDF via the
+  // shared PrintableReport (revealed by the global print stylesheet). Each
+  // download is recorded in the report history.
+  const handleDownloadPdf = () => {
+    addSavedReport();
+    setTimeout(() => window.print(), 150);
+  };
+
   return (
+    <>
     <div className={styles.page}>
       {/* Step tracker */}
       <div className={styles.stepTrackerWrapper}>
@@ -151,13 +183,22 @@ export const FarmDashboard: React.FC = () => {
             </p>
           </div>
 
-          <button
-            onClick={() => navigate("/save")}
-            className={styles.saveButton}
-            aria-label="Save this farm report to your profile"
-          >
-            <User size={15} /> {saved ? "Saved" : "Save My Farm"}
-          </button>
+          <div className={styles.headerActions}>
+            <button
+              onClick={handleDownloadPdf}
+              className={styles.downloadButton}
+              aria-label="Download this farm report as a PDF"
+            >
+              <Download size={15} /> Download PDF
+            </button>
+            <button
+              onClick={() => navigate("/save")}
+              className={styles.saveButton}
+              aria-label="Save this farm report to your profile"
+            >
+              <User size={15} /> {saved ? "Saved" : "Save My Farm"}
+            </button>
+          </div>
         </div>
 
         <div className={styles.grid}>
@@ -166,19 +207,16 @@ export const FarmDashboard: React.FC = () => {
             <div className={styles.pillWrapper}>
               <EyebrowPill>Farm Health Status</EyebrowPill>
             </div>
-            <div className={styles.healthStatusRow}>
-              <div
-                className={`${styles.healthIconBox} ${cfg.bgClass} ${cfg.borderClass}`}
-                aria-label={cfg.iconLabel}
-                role="img"
-              >
-                <HealthIcon size={26} className={cfg.colorClass} />
+            <div
+              className={`${styles.statusBanner} ${cfg.bgClass} ${cfg.borderClass}`}
+              aria-label={cfg.iconLabel}
+            >
+              <div className={styles.statusIconBox}>
+                <HealthIcon size={28} className={cfg.colorClass} />
               </div>
-              <div>
-                <div className={`${styles.healthLabel} ${cfg.colorClass}`}>
-                  {cfg.label}
-                </div>
-              </div>
+              <span className={`${styles.statusWord} ${cfg.colorClass}`}>
+                {cfg.label}
+              </span>
             </div>
             <p className={styles.cardDescription}>{cfg.desc}</p>
             <div className={styles.progressBarBg}>
@@ -223,20 +261,7 @@ export const FarmDashboard: React.FC = () => {
             </div>
 
             <div className={styles.tipsList}>
-              {(apiRecommendations && apiRecommendations.length > 0
-                ? apiRecommendations
-                : health === "healthy"
-                ? [
-                    "Continue crop monitoring every 2 weeks",
-                    "Add compost or leaf mold to topsoil",
-                    "Avoid over-watering in low-lying quadrants",
-                  ]
-                : [
-                    "Use 50 kg CAN per acre, applied at base of plants",
-                    "Add 5 cm organic mulch layer to retain moisture",
-                    "Avoid irrigation during hottest part of day (11am to 3pm)",
-                  ]
-              ).map((tip, i) => (
+              {recommendations.map((tip, i) => (
                 <div key={i} className={styles.tipItem}>
                   <span className={styles.tipNumber}>{i + 1}</span>
                   <span>{tip}</span>
@@ -315,5 +340,9 @@ export const FarmDashboard: React.FC = () => {
         </div>
       </div>
     </div>
+
+      {/* Print-only report (browser Save as PDF) */}
+      <PrintableReport farmInfo={farmInfo} />
+    </>
   );
 };

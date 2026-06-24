@@ -3,7 +3,6 @@ import { useNavigate } from "react-router";
 import { ArrowRight, Sprout, Globe, Info, Award } from "lucide-react";
 import { useAuth, useStep } from "../../../hooks";
 import { Button, EyebrowPill, NumberedCard, InfoCallout } from "../../../components/ui";
-import { StepBar } from "../../../components/shared";
 import farmerPhoto from "../../../assets/african_farmer.jpg";
 import styles from "./LandingScreen.module.css";
 
@@ -81,9 +80,6 @@ export const LandingScreen: React.FC = () => {
               Create Free Account
             </Button>
           </div>
-          <p className={styles.heroFooterLabel}>
-            Free · No password · Works on 2G · Available in Swahili
-          </p>
         </div>
 
         <div className={styles.heroPhotoCol}>
@@ -100,26 +96,6 @@ export const LandingScreen: React.FC = () => {
             <p className={styles.quoteAuthor}>
               - James M., Smallholder farmer, Murang'a
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Step tracker section */}
-      <section className={styles.journeySection}>
-        <div className={styles.journeyContainer}>
-          <EyebrowPill dark>Your Journey</EyebrowPill>
-          <h2 className={styles.journeyTitle}>
-            From field to insight in 5 steps
-          </h2>
-          <StepBar />
-          <div className={styles.journeyStepsLabelRow}>
-            {["Visit Website", "Enter Farm Info", "AI Analysis", "View Dashboard", "Track Progress"].map((label, idx) => (
-              <div key={label} className={styles.journeyLabelCol}>
-                <p className={styles.journeyLabelText}>
-                  {idx + 1}. {label}
-                </p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -163,7 +139,7 @@ export const LandingScreen: React.FC = () => {
         <div className={styles.socialProofGrid}>
           {[
             { stat: "14,200+", label: "Farmers analyzed" },
-            { stat: "47 counties", label: "Across Kenya" },
+            { stat: "6 regions", label: "Across Kenya" },
             { stat: "Avg. 23%", label: "Yield improvement reported" },
           ].map(({ stat, label }) => (
             <div key={stat}>
@@ -182,7 +158,7 @@ export const LandingScreen: React.FC = () => {
           Let's read it.
         </h2>
         <p className={styles.ctaDesc}>
-          No sign-up. No password. Results in under 30 seconds.
+          Free to start. Get your farm insights in under a minute.
         </p>
         <div className={styles.ctaButtonWrapper}>
           <Button onClick={handleStart} variant="accent">

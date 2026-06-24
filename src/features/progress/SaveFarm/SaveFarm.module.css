@@ -151,3 +151,168 @@
   background-color: var(--shamba-muted-inactive);
   color: var(--shamba-primary-dark-green);
 }
+
+/* ── Report summary + download history (redesigned page) ── */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  padding: 2rem 0;
+}
+
+.summaryCard {
+  background-color: var(--shamba-mint);
+  border: 1.5px solid var(--shamba-sage-border);
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.summaryRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--shamba-muted-inactive);
+}
+
+.summaryRow:last-child {
+  border-bottom: none;
+}
+
+.summaryKey {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--shamba-muted);
+}
+
+.summaryVal {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--shamba-primary-dark-green);
+}
+
+.gradeBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.gradeA {
+  background-color: #D6F0E0;
+  color: var(--shamba-active-highlight-green);
+  border: 1.5px solid var(--shamba-active-highlight-green);
+}
+
+.gradeB {
+  background-color: var(--shamba-ochre-bg);
+  color: var(--shamba-moderate);
+  border: 1.5px solid var(--shamba-moderate);
+}
+
+.gradeC {
+  background-color: #FDEAE6;
+  color: var(--shamba-dry);
+  border: 1.5px solid var(--shamba-dry);
+}
+
+.historySection {
+  margin-top: 2rem;
+}
+
+.historyTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--shamba-primary-dark-green);
+  margin-bottom: 0.75rem;
+  font-family: var(--shamba-font-body);
+}
+
+.emptyHistory {
+  padding: 1.25rem;
+  border: 2px dashed var(--shamba-sage-border);
+  border-radius: 0.75rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--shamba-muted);
+  background-color: var(--shamba-mint);
+}
+
+.historyList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.historyItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--shamba-mint);
+  border: 1.5px solid var(--shamba-sage-border);
+  border-radius: 0.75rem;
+}
+
+.historyMain {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.historyName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--shamba-primary-dark-green);
+}
+
+.historyDate {
+  font-size: 0.78rem;
+  color: var(--shamba-muted);
+}
+
+.historyTags {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.historyHealth {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--shamba-muted);
+}
+
+.secondaryLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 1.5rem auto 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--shamba-active-highlight-green);
+  font-family: var(--shamba-font-body);
+}
+
+.secondaryLink:hover {
+  color: var(--shamba-primary-dark-green);
+}

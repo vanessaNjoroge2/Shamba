@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "sonner";
-import { AppContextState, FarmInfo, User, Step, HealthStatus } from "../types";
+import { AppContextState, FarmInfo, User, Step, HealthStatus, SavedReport } from "../types";
 import {
   signup as apiSignup,
   login as apiLogin,
@@ -135,6 +135,7 @@ export interface AppContextType extends AppContextState {
   resendOtp: () => void;
   logout: () => void;
   saveFarmInfo: (info: FarmInfo) => void;
+  addSavedReport: () => SavedReport | null;
   runAssessment: (info: FarmInfo) => Promise<boolean>;
   completeStep: (stepId: number) => void;
   setCurrentStepId: (stepId: number) => void;
@@ -181,6 +182,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [saved, setSavedState] = useState<boolean>(() => {
     return localStorage.getItem("shamba_saved") === "true";
+  });
+
+  const [savedReports, setSavedReports] = useState<SavedReport[]>(() => {
+    const stored = localStorage.getItem("shamba_savedReports");
+    return stored ? JSON.parse(stored) : [];
   });
 
   const [assessmentLoading, setAssessmentLoading] = useState<boolean>(false);
@@ -234,6 +240,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     localStorage.setItem("shamba_saved", String(saved));
   }, [saved]);
+
+  useEffect(() => {
+    localStorage.setItem("shamba_savedReports", JSON.stringify(savedReports));
+  }, [savedReports]);
 
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -341,6 +351,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setMockOtp(null);
     setFarmInfo(null);
     setSavedState(false);
+    setSavedReports([]);
     setCompletedStepIds([1]);
     setCurrentStepIdState(1);
     setAssessmentError(null);
@@ -351,6 +362,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.removeItem("shamba_mockOtp");
     localStorage.removeItem("shamba_farmInfo");
     localStorage.removeItem("shamba_saved");
+    localStorage.removeItem("shamba_savedReports");
     localStorage.removeItem("shamba_completedStepIds");
     localStorage.removeItem("shamba_currentStepId");
 
@@ -363,6 +375,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const saveFarmInfo = (info: FarmInfo) => {
     setFarmInfo(info);
     completeStep(2);
+  };
+
+  /**
+   * Snapshots the current farm report into the download history and marks the
+   * report as saved (which also unlocks the trend charts). Returns the new
+   * entry, or null if there's no assessment to save yet.
+   */
+  const addSavedReport = (): SavedReport | null => {
+    if (!farmInfo) return null;
+    const entry: SavedReport = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      timestamp: new Date().toISOString(),
+      region: farmInfo.region,
+      cropType: farmInfo.cropType,
+      farmSize: farmInfo.farmSize,
+      sizeUnit: farmInfo.sizeUnit,
+      healthStatus: farmInfo.health_status ?? farmInfo.healthStatus ?? "moderate",
+      carbonEstimate: farmInfo.carbon_estimate ?? farmInfo.carbonValue ?? 0,
+      carbonGrade: farmInfo.carbon_grade ?? farmInfo.carbonGrade ?? "C",
+    };
+    setSavedReports((prev) => [entry, ...prev]);
+    setSavedState(true);
+    return entry;
   };
 
   /**
@@ -464,6 +499,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         completedStepIds,
         farmInfo,
         saved,
+        savedReports,
         assessmentLoading,
         assessmentError,
         signupUser,
@@ -473,6 +509,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         resendOtp,
         logout,
         saveFarmInfo,
+        addSavedReport,
         runAssessment,
         completeStep,
         setCurrentStepId,

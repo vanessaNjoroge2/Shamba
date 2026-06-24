@@ -104,7 +104,7 @@ export const OtpVerification: React.FC = () => {
             <blockquote className={styles.quote}>
               "The best tool a smallholder farmer has ever had."
             </blockquote>
-            <p className={styles.quoteAuthor}>- Agnes W., Kisii County</p>
+            <p className={styles.quoteAuthor}>- Agnes W., Kisii Region</p>
           </div>
         </div>
       </div>
