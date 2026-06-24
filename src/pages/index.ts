@@ -1,5 +1,7 @@
 export { default as LandingPage } from "./LandingPage";
 export { default as LoginPage } from "./LoginPage";
+export { default as SignupPage } from "./SignupPage";
+export { default as ForgotPasswordPage } from "./ForgotPasswordPage";
 export { default as OtpPage } from "./OtpPage";
 export { default as OnboardingPage } from "./OnboardingPage";
 export { default as AnalysisPage } from "./AnalysisPage";

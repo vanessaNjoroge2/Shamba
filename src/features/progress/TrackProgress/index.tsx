@@ -12,7 +12,7 @@ import {
   Legend,
 } from "recharts";
 import { useAppStore } from "../../../store";
-import { useStep } from "../../../hooks";
+import { useStep, useFarmHistory } from "../../../hooks";
 import { EyebrowPill, Button } from "../../../components/ui";
 import { StepBar } from "../../../components/shared";
 import styles from "./TrackProgress.module.css";
@@ -26,18 +26,49 @@ const TREND_DATA = [
   { visit: "Aug 24", health: 80, carbon: 38 },
 ];
 
+// Backend health labels mapped to a 0-100 score for the trend line.
+const HEALTH_SCORE: Record<string, number> = {
+  healthy: 80,
+  moderate: 55,
+  dry: 25,
+};
+
 /**
  * TrackProgress component displays empty progress state or Recharts historical trends.
  */
 export const TrackProgress: React.FC = () => {
-  const { saved, user, setCurrentStepId } = useAppStore();
+  const { saved, user, setCurrentStepId, farmInfo } = useAppStore();
   const { currentStepId } = useStep();
+  const { history, fetchHistory } = useFarmHistory();
   const navigate = useNavigate();
 
   // Set the current step ID to 5 (Track Progress) when page mounts
   useEffect(() => {
     setCurrentStepId(5);
   }, [setCurrentStepId]);
+
+  // Load real assessment history from the backend on mount.
+  useEffect(() => {
+    fetchHistory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Build chart data from the backend history (oldest first). When the backend
+  // returns nothing we keep the existing saved/empty-state behaviour untouched.
+  const apiTrendData = [...history]
+    .reverse()
+    .map((item) => ({
+      visit: new Date(item.timestamp).toLocaleDateString(undefined, {
+        month: "short",
+        year: "2-digit",
+      }),
+      health: HEALTH_SCORE[item.health_status] ?? 50,
+      carbon: item.carbon_estimate,
+    }));
+
+  const hasApiHistory = apiTrendData.length > 0;
+  const chartData = hasApiHistory ? apiTrendData : TREND_DATA;
+  const showChart = hasApiHistory || saved;
 
   return (
     <div className={styles.page}>
@@ -64,17 +95,33 @@ export const TrackProgress: React.FC = () => {
           <h1 className={styles.title}>Your farm over time</h1>
         </div>
 
-        {saved ? (
+        {showChart ? (
           <>
             <p className={styles.subtitle}>
-              Murang'a, Kenya · 6 visits since October 2023
+              {(() => {
+                const REGION_NAMES: Record<string, string> = {
+                  nairobi: "Nairobi",
+                  central: "Central Kenya",
+                  rift: "Rift Valley",
+                  western: "Western Kenya",
+                  coast: "Coast",
+                  eastern: "Eastern Kenya",
+                };
+                const regionId = farmInfo?.region || "central";
+                const rawRegionName = REGION_NAMES[regionId] || "Central Kenya";
+                const regionLabel = rawRegionName.includes("Kenya") ? rawRegionName : `${rawRegionName}, Kenya`;
+                return regionLabel;
+              })()}
+              {hasApiHistory
+                ? ` · ${chartData.length} ${chartData.length === 1 ? "visit" : "visits"} recorded`
+                : " · 6 visits since October 2023"}
             </p>
 
             <div className={styles.chartCard}>
               <h2 className={styles.chartTitle}>Farm Health &amp; Carbon Score</h2>
               <div className={styles.chartContainer}>
                 <ResponsiveContainer width="100%" height={280}>
-                  <LineChart data={TREND_DATA} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                  <LineChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--shamba-sage-border)" strokeOpacity={0.5} />
                     <XAxis
                       dataKey="visit"
@@ -128,11 +175,28 @@ export const TrackProgress: React.FC = () => {
             </div>
 
             <div className={styles.statsGrid}>
-              {[
-                { label: "Best Health Score", value: "80", sub: "August 2024", colorClass: styles.colorHealthy },
-                { label: "Best Carbon Score", value: "41", sub: "June 2024", colorClass: styles.colorModerate },
-                { label: "Total Improvement", value: "+23%", sub: "Since first visit", colorClass: styles.colorPrimary },
-              ].map(({ label, value, sub, colorClass }) => (
+              {(hasApiHistory
+                ? (() => {
+                    const healths = chartData.map((d) => d.health);
+                    const carbons = chartData.map((d) => d.carbon);
+                    const bestHealth = Math.max(...healths);
+                    const bestCarbon = Math.max(...carbons);
+                    const first = healths[0];
+                    const last = healths[healths.length - 1];
+                    const improvement =
+                      first > 0 ? Math.round(((last - first) / first) * 100) : 0;
+                    return [
+                      { label: "Best Health Score", value: String(bestHealth), sub: "Across your visits", colorClass: styles.colorHealthy },
+                      { label: "Best Carbon Score", value: String(bestCarbon), sub: "kg CO2", colorClass: styles.colorModerate },
+                      { label: "Total Change", value: `${improvement >= 0 ? "+" : ""}${improvement}%`, sub: "Since first visit", colorClass: styles.colorPrimary },
+                    ];
+                  })()
+                : [
+                    { label: "Best Health Score", value: "80", sub: "August 2024", colorClass: styles.colorHealthy },
+                    { label: "Best Carbon Score", value: "41", sub: "June 2024", colorClass: styles.colorModerate },
+                    { label: "Total Improvement", value: "+23%", sub: "Since first visit", colorClass: styles.colorPrimary },
+                  ]
+              ).map(({ label, value, sub, colorClass }) => (
                 <div key={label} className={styles.statCard}>
                   <p className={styles.statLabel}>{label}</p>
                   <p className={`${styles.statValue} ${colorClass}`}>{value}</p>
@@ -149,7 +213,7 @@ export const TrackProgress: React.FC = () => {
             </div>
             <h2 className={styles.emptyTitle}>Your trend chart is waiting</h2>
             <p className={styles.emptyDesc}>
-              Trends appear after your <strong>second visit</strong>. Come back after trying our recommendations — you'll see your farm's health and carbon score change over time.
+              Trends appear after your <strong>second visit</strong>. Come back after trying our recommendations - you'll see your farm's health and carbon score change over time.
             </p>
             <div className={styles.checklist}>
               <p className={styles.checklistTitle}>What you'll unlock on your next visit:</p>

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router";
 import { ArrowRight, Sprout, Globe, Info, Award } from "lucide-react";
 import { useAuth, useStep } from "../../../hooks";
 import { Button, EyebrowPill, NumberedCard, InfoCallout } from "../../../components/ui";
-import { StepBar } from "../../../components/shared";
 import farmerPhoto from "../../../assets/african_farmer.jpg";
 import styles from "./LandingScreen.module.css";
 
@@ -48,7 +47,7 @@ export const LandingScreen: React.FC = () => {
                 Log In
               </button>
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/signup")}
                 className={styles.signUpBtn}
                 aria-label="Sign up for free account"
               >
@@ -69,7 +68,7 @@ export const LandingScreen: React.FC = () => {
             Farming <em className={styles.heroEm}>in the Dark</em>?
           </h1>
           <p className={styles.heroDesc}>
-            Smallholder farmers manage 80% of Africa's food supply — yet most
+            Smallholder farmers manage 80% of Africa's food supply - yet most
             lack access to soil data, weather insights, or carbon credits.
             Shamba changes that. No app download. Just answers.
           </p>
@@ -77,13 +76,10 @@ export const LandingScreen: React.FC = () => {
             <Button onClick={handleStart} variant="primary">
               Analyze My Farm <ArrowRight size={17} />
             </Button>
-            <Button onClick={() => navigate("/login")} variant="ghost">
+            <Button onClick={() => navigate("/signup")} variant="ghost">
               Create Free Account
             </Button>
           </div>
-          <p className={styles.heroFooterLabel}>
-            Free · No password · Works on 2G · Available in Swahili
-          </p>
         </div>
 
         <div className={styles.heroPhotoCol}>
@@ -98,28 +94,8 @@ export const LandingScreen: React.FC = () => {
               "Now I know exactly what my soil needs, before the season starts."
             </p>
             <p className={styles.quoteAuthor}>
-              — James M., Smallholder farmer, Murang'a
+              - James M., Smallholder farmer, Murang'a
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Step tracker section */}
-      <section className={styles.journeySection}>
-        <div className={styles.journeyContainer}>
-          <EyebrowPill dark>Your Journey</EyebrowPill>
-          <h2 className={styles.journeyTitle}>
-            From field to insight in 5 steps
-          </h2>
-          <StepBar />
-          <div className={styles.journeyStepsLabelRow}>
-            {["Visit Website", "Enter Farm Info", "AI Analysis", "View Dashboard", "Track Progress"].map((label, idx) => (
-              <div key={label} className={styles.journeyLabelCol}>
-                <p className={styles.journeyLabelText}>
-                  {idx + 1}. {label}
-                </p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -140,7 +116,7 @@ export const LandingScreen: React.FC = () => {
             <NumberedCard
               number={2}
               title="AI Assessment"
-              description="Our model cross-references satellite NDVI, soil moisture indices, and 30-day rainfall data for your exact GPS location."
+              description="Our model cross-references satellite imagery, soil moisture indices, and 30-day rainfall data for your exact GPS location."
             />
             <NumberedCard
               number={3}
@@ -163,7 +139,7 @@ export const LandingScreen: React.FC = () => {
         <div className={styles.socialProofGrid}>
           {[
             { stat: "14,200+", label: "Farmers analyzed" },
-            { stat: "3 countries", label: "Kenya · Uganda · Tanzania" },
+            { stat: "6 regions", label: "Across Kenya" },
             { stat: "Avg. 23%", label: "Yield improvement reported" },
           ].map(({ stat, label }) => (
             <div key={stat}>
@@ -182,11 +158,11 @@ export const LandingScreen: React.FC = () => {
           Let's read it.
         </h2>
         <p className={styles.ctaDesc}>
-          No sign-up. No password. Results in under 30 seconds.
+          Free to start. Get your farm insights in under a minute.
         </p>
         <div className={styles.ctaButtonWrapper}>
           <Button onClick={handleStart} variant="accent">
-            Get My Farm Report — Free <ArrowRight size={17} />
+            Get My Farm Report - Free <ArrowRight size={17} />
           </Button>
         </div>
       </section>

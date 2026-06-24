@@ -1,44 +1,41 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { Leaf, ThermometerSun, Flame, BarChart2, User, TrendingUp, ArrowRight, TreePine, Award } from "lucide-react";
+import { Leaf, ThermometerSun, Flame, BarChart2, User, TrendingUp, ArrowRight, TreePine, Award, Download } from "lucide-react";
 import { useAppStore } from "../../../store";
 import { useStep } from "../../../hooks";
 import { EyebrowPill, InfoCallout } from "../../../components/ui";
-import { StepBar } from "../../../components/shared";
+import { StepBar, PrintableReport } from "../../../components/shared";
 import { HealthStatus } from "../../../types";
 import styles from "./FarmDashboard.module.css";
 
 const HEALTH_CONFIG = {
   healthy: {
-    label: "Healthy",
+    label: "Good",
     Icon: Leaf,
     colorClass: styles.colorHealthy,
     bgClass: styles.bgHealthy,
     borderClass: styles.borderHealthy,
-    iconLabel: "Green leaf — farm is healthy",
-    ndvi: "0.72",
+    iconLabel: "Green leaf - farm is healthy",
     fillWidth: "72%",
     desc: "Your crops show excellent chlorophyll absorption. Soil moisture is optimal for this stage of growth. Keep doing what you are doing!"
   },
   moderate: {
-    label: "Moderate Stress",
+    label: "Warning",
     Icon: ThermometerSun,
     colorClass: styles.colorModerate,
     bgClass: styles.bgModerate,
     borderClass: styles.borderModerate,
-    iconLabel: "Thermometer — moderate heat stress",
-    ndvi: "0.42",
+    iconLabel: "Thermometer - moderate heat stress",
     fillWidth: "42%",
     desc: "Your crops show signs of mild heat stress. Soil moisture is below the seasonal average for the region. Action recommended within 2 weeks."
   },
   dry: {
-    label: "Drought Risk",
+    label: "Critical",
     Icon: Flame,
     colorClass: styles.colorDry,
     bgClass: styles.bgDry,
     borderClass: styles.borderDry,
-    iconLabel: "Flame — high drought risk",
-    ndvi: "0.21",
+    iconLabel: "Flame - high drought risk",
     fillWidth: "21%",
     desc: "Critical water stress detected. Vegetation moisture content is extremely low. Immediate irrigation or moisture-retention action is required."
   },
@@ -48,7 +45,7 @@ const HEALTH_CONFIG = {
  * FarmDashboard component displaying AI insights on soil, health, and carbon.
  */
 export const FarmDashboard: React.FC = () => {
-  const { farmInfo, setCurrentStepId, saved } = useAppStore();
+  const { farmInfo, setCurrentStepId, saved, addSavedReport } = useAppStore();
   const { currentStepId } = useStep();
   const navigate = useNavigate();
 
@@ -57,8 +54,38 @@ export const FarmDashboard: React.FC = () => {
     setCurrentStepId(4);
   }, [setCurrentStepId]);
 
-  // Determine health status dynamically based on irrigation input
+  // Guard: no farm data at all yet (e.g. user jumped straight to /dashboard)
+  if (!farmInfo) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.stepTrackerWrapper}>
+          <StepBar />
+        </div>
+        <div className={styles.emptyState}>
+          <div className={styles.emptyIcon}>
+            <Leaf size={32} />
+          </div>
+          <p className={styles.emptyTitle}>No farm analysis yet</p>
+          <p className={styles.emptyText}>
+            Tell us about your farm and we'll show your health, carbon, and
+            tailored recommendations.
+          </p>
+          <button onClick={() => navigate("/onboarding")} className={styles.emptyButton}>
+            Analyse your farm <ArrowRight size={16} />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Determine health status dynamically: prefer the real backend result, then
+  // the region-derived fallback, then an irrigation-based heuristic.
   const getHealthStatus = (): HealthStatus => {
+    const apiStatus = farmInfo?.health_status;
+    if (apiStatus && ["healthy", "moderate", "dry"].includes(apiStatus)) {
+      return apiStatus as HealthStatus;
+    }
+    if (farmInfo?.healthStatus) return farmInfo.healthStatus;
     if (farmInfo?.irrigation === "drip") return "healthy";
     if (farmInfo?.irrigation === "furrow" || farmInfo?.irrigation === "sprinkler") return "healthy";
     if (farmInfo?.irrigation === "rainfall") return "moderate";
@@ -78,7 +105,65 @@ export const FarmDashboard: React.FC = () => {
       : farmInfo.irrigation.charAt(0).toUpperCase() + farmInfo.irrigation.slice(1)
     : "Rainfall-fed";
 
+  const REGION_NAMES: Record<string, string> = {
+    nairobi: "Nairobi",
+    central: "Central Kenya",
+    rift: "Rift Valley",
+    western: "Western Kenya",
+    coast: "Coast",
+    eastern: "Eastern Kenya",
+  };
+  const regionId = farmInfo?.region || "central";
+  const rawRegionName = REGION_NAMES[regionId] || "Central Kenya";
+  const regionLabel = rawRegionName.includes("Kenya") ? rawRegionName : `${rawRegionName}, Kenya`;
+
+  // Prefer the real backend numbers; fall back to region-derived local values.
+  const carbonValue = farmInfo?.carbon_estimate ?? farmInfo?.carbonValue ?? 38;
+  const carbonGrade = farmInfo?.carbon_grade ?? farmInfo?.carbonGrade ?? "C";
+
+  // Parse the backend's numbered recommendation string into individual tips.
+  const apiRecommendations = farmInfo?.recommendations
+    ? farmInfo.recommendations
+        .split(/\n+/)
+        .map((line) =>
+          line
+            .replace(/^\s*\d+[.)]\s*/, "")
+            .replace(/[‒-―]/g, "-") // normalise any dash to a hyphen
+            .trim()
+        )
+        .filter(Boolean)
+    : null;
+
+  const assessmentDate = farmInfo?.assessment_timestamp
+    ? new Date(farmInfo.assessment_timestamp).toLocaleDateString()
+    : null;
+
+  // The 3 recommendations shown on screen and in the PDF (real or fallback).
+  const recommendations =
+    apiRecommendations && apiRecommendations.length > 0
+      ? apiRecommendations
+      : health === "healthy"
+      ? [
+          "Continue crop monitoring every 2 weeks",
+          "Add compost or leaf mold to topsoil",
+          "Avoid over-watering in low-lying quadrants",
+        ]
+      : [
+          "Use 50 kg CAN per acre, applied at base of plants",
+          "Add 5 cm organic mulch layer to retain moisture",
+          "Avoid irrigation during hottest part of day (11am to 3pm)",
+        ];
+
+  // No jsPDF in the project, so we use the browser's print-to-PDF via the
+  // shared PrintableReport (revealed by the global print stylesheet). Each
+  // download is recorded in the report history.
+  const handleDownloadPdf = () => {
+    addSavedReport();
+    setTimeout(() => window.print(), 150);
+  };
+
   return (
+    <>
     <div className={styles.page}>
       {/* Step tracker */}
       <div className={styles.stepTrackerWrapper}>
@@ -93,17 +178,27 @@ export const FarmDashboard: React.FC = () => {
             </EyebrowPill>
             <h1 className={styles.title}>Farm Analysis</h1>
             <p className={styles.subtitle}>
-              {cropLabel} · {sizeLabel} · {irrigationLabel} · Murang'a, Kenya
+              {cropLabel} · {sizeLabel} · {irrigationLabel} · {regionLabel}
+              {assessmentDate ? ` · Analysed ${assessmentDate}` : ""}
             </p>
           </div>
 
-          <button
-            onClick={() => navigate("/save")}
-            className={styles.saveButton}
-            aria-label="Save this farm report to your profile"
-          >
-            <User size={15} /> {saved ? "Saved" : "Save My Farm"}
-          </button>
+          <div className={styles.headerActions}>
+            <button
+              onClick={handleDownloadPdf}
+              className={styles.downloadButton}
+              aria-label="Download this farm report as a PDF"
+            >
+              <Download size={15} /> Download PDF
+            </button>
+            <button
+              onClick={() => navigate("/save")}
+              className={styles.saveButton}
+              aria-label="Save this farm report to your profile"
+            >
+              <User size={15} /> {saved ? "Saved" : "Save My Farm"}
+            </button>
+          </div>
         </div>
 
         <div className={styles.grid}>
@@ -112,22 +207,16 @@ export const FarmDashboard: React.FC = () => {
             <div className={styles.pillWrapper}>
               <EyebrowPill>Farm Health Status</EyebrowPill>
             </div>
-            <div className={styles.healthStatusRow}>
-              <div
-                className={`${styles.healthIconBox} ${cfg.bgClass} ${cfg.borderClass}`}
-                aria-label={cfg.iconLabel}
-                role="img"
-              >
-                <HealthIcon size={26} className={cfg.colorClass} />
+            <div
+              className={`${styles.statusBanner} ${cfg.bgClass} ${cfg.borderClass}`}
+              aria-label={cfg.iconLabel}
+            >
+              <div className={styles.statusIconBox}>
+                <HealthIcon size={28} className={cfg.colorClass} />
               </div>
-              <div>
-                <div className={`${styles.healthLabel} ${cfg.colorClass}`}>
-                  {cfg.label}
-                </div>
-                <div className={styles.healthMeta}>
-                  NDVI score: {cfg.ndvi} / 1.00
-                </div>
-              </div>
+              <span className={`${styles.statusWord} ${cfg.colorClass}`}>
+                {cfg.label}
+              </span>
             </div>
             <p className={styles.cardDescription}>{cfg.desc}</p>
             <div className={styles.progressBarBg}>
@@ -144,7 +233,7 @@ export const FarmDashboard: React.FC = () => {
             </div>
             <div className={styles.progressLabels}>
               <span>Critical</span>
-              <span>{cfg.ndvi.replace("0.", "")} / 100</span>
+              <span>{cfg.label}</span>
               <span>Excellent</span>
             </div>
           </div>
@@ -166,24 +255,13 @@ export const FarmDashboard: React.FC = () => {
               <p className={styles.calloutTitle}>Why this recommendation</p>
               <p className={styles.calloutDesc}>
                 {health === "healthy"
-                  ? "NDVI index is optimal (0.72). Regular nitrogen tracking shows stable absorption, but adding compost sustains organic micro-biome."
-                  : `Satellite imagery shows reduced leaf greenness (NDVI: ${cfg.ndvi} vs regional baseline 0.61). Nitrogen deficiency is the most likely cause given current rainfall patterns.`}
+                  ? "Your crops show strong, steady growth for this region. Keeping up your current soil care and adding compost will sustain healthy yields."
+                  : "Your crops show signs of stress for this region and season. Nitrogen support and better moisture retention are the most useful next steps."}
               </p>
             </div>
 
             <div className={styles.tipsList}>
-              {(health === "healthy"
-                ? [
-                    "Continue crop monitoring every 2 weeks",
-                    "Add compost or leaf mold to topsoil",
-                    "Avoid over-watering in low-lying quadrants",
-                  ]
-                : [
-                    "Use 50 kg CAN per acre, applied at base of plants",
-                    "Add 5 cm organic mulch layer to retain moisture",
-                    "Avoid irrigation during hottest part of day (11am–3pm)",
-                  ]
-              ).map((tip, i) => (
+              {recommendations.map((tip, i) => (
                 <div key={i} className={styles.tipItem}>
                   <span className={styles.tipNumber}>{i + 1}</span>
                   <span>{tip}</span>
@@ -201,30 +279,43 @@ export const FarmDashboard: React.FC = () => {
             </div>
             <div className={styles.carbonScoreBlock}>
               <div className={styles.carbonValueRow}>
-                <span className={styles.carbonValue}>38</span>
-                <span className={styles.carbonMax}>/ 100</span>
+                <span className={styles.carbonValue}>{carbonValue}</span>
+                <span className={styles.carbonUnit}>kg CO₂</span>
+                <span className={styles.carbonDivider}>|</span>
+                <span className={`${styles.carbonGradeBadge} ${
+                  carbonGrade === "A"
+                    ? styles.gradeA
+                    : carbonGrade === "B"
+                      ? styles.gradeB
+                      : styles.gradeC
+                }`}>
+                  Grade {carbonGrade}
+                </span>
               </div>
-              <p className={styles.carbonLabel}>Carbon Sequestration Score</p>
+              <p className={styles.carbonLabel}>Carbon Impact</p>
             </div>
 
             <div className={styles.carbonCallout}>
               <TreePine size={18} className={styles.treeIcon} />
               <p className={styles.carbonCalloutDesc}>
-                Your farm is sequestering carbon equivalent to{" "}
-                <strong>4.2 trees planted this year</strong> — below the potential of 11 trees for a healthy 1.5-acre plot.
+                {carbonGrade === "A"
+                  ? `A low carbon footprint for a ${sizeLabel} farm. This is excellent - keeping your water use efficient holds you in the top band.`
+                  : carbonGrade === "B"
+                    ? `A moderate carbon footprint for a ${sizeLabel} farm. Small changes to how you irrigate can move you into the top band.`
+                    : `A high carbon footprint for a ${sizeLabel} farm. Reducing water use is the fastest way to bring it down.`}
               </p>
             </div>
 
             <div className={styles.carbonProgressBarBg}>
               <div
                 className={styles.carbonProgressBarFill}
-                style={{ width: "38%" }}
+                style={{ width: `${Math.min((carbonValue / 10) * 100, 100)}%` }}
               />
             </div>
             <div className={styles.carbonProgressLabels}>
-              <span>Low</span>
-              <span>Score: 38</span>
-              <span>High</span>
+              <span>Lower is better</span>
+              <span>{carbonValue} kg CO₂</span>
+              <span>Higher</span>
             </div>
 
             <button
@@ -242,12 +333,16 @@ export const FarmDashboard: React.FC = () => {
         {/* Lower callout */}
         <div className={styles.footerCallout}>
           <InfoCallout icon={<Award size={15} />}>
-            <strong>Carbon credit eligibility.</strong> Once your score reaches
-            55+, you may qualify for micro carbon credit programs through our
-            partner network. Improve soil health to unlock this benefit.
+            <strong>Carbon credit eligibility.</strong> Farms that reach Grade A
+            may qualify for micro carbon credit programs through our partner
+            network. Lower your water use to improve your grade and unlock this.
           </InfoCallout>
         </div>
       </div>
     </div>
+
+      {/* Print-only report (browser Save as PDF) */}
+      <PrintableReport farmInfo={farmInfo} />
+    </>
   );
 };

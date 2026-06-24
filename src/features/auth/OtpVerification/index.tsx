@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
-import { Phone, ChevronRight, ArrowRight, Sprout } from "lucide-react";
+import { Mail, ChevronRight, ArrowRight, Sprout, KeyRound } from "lucide-react";
+import { toast } from "sonner";
 import { useAuth } from "../../../hooks";
 import { Button, EyebrowPill, InfoCallout } from "../../../components/ui";
 import farmerPhoto from "../../../assets/african_farmer.jpg";
@@ -10,7 +11,7 @@ import styles from "./OtpVerification.module.css";
  * OtpVerification component validates the 6-digit verification code sent to phone and email.
  */
 export const OtpVerification: React.FC = () => {
-  const { user, mockOtp, verifyOtp, resendOtp } = useAuth();
+  const { user, verifyOtp, resendOtp } = useAuth();
   const navigate = useNavigate();
   
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -26,10 +27,10 @@ export const OtpVerification: React.FC = () => {
     return () => clearTimeout(timer);
   }, [cooldown]);
 
-  // If user somehow gets to OTP without typing credentials, send them to login
+  // If the user reaches OTP without starting the reset flow, send them back.
   useEffect(() => {
     if (!user) {
-      navigate("/login");
+      navigate("/forgot");
     }
   }, [user, navigate]);
 
@@ -65,8 +66,9 @@ export const OtpVerification: React.FC = () => {
       setLoading(false);
       const isOk = verifyOtp(enteredCode);
       if (isOk) {
-        // Successful login, always redirect to /onboarding (Step 2: Enter Farm Info)
-        navigate("/onboarding");
+        // Code confirmed: password reset complete, send the farmer to log in.
+        toast.success("Password reset! Please log in.");
+        navigate("/login");
       } else {
         setError("Invalid code. Please try again.");
         // Clear OTP inputs
@@ -102,7 +104,7 @@ export const OtpVerification: React.FC = () => {
             <blockquote className={styles.quote}>
               "The best tool a smallholder farmer has ever had."
             </blockquote>
-            <p className={styles.quoteAuthor}>— Agnes W., Kisii County</p>
+            <p className={styles.quoteAuthor}>- Agnes W., Kisii Region</p>
           </div>
         </div>
       </div>
@@ -117,22 +119,22 @@ export const OtpVerification: React.FC = () => {
         <div className={styles.formContainer}>
           <div className={styles.headerBlock}>
             <button
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/forgot")}
               className={styles.backButton}
-              aria-label="Change phone number and email"
+              aria-label="Change email address"
             >
-              <ChevronRight size={15} className={styles.rotateBack} /> Change contact details
+              <ChevronRight size={15} className={styles.rotateBack} /> Change email address
             </button>
             <div className={styles.pillWrapper}>
               <EyebrowPill>
-                <Phone size={11} /> Code Sent
+                <KeyRound size={11} /> Code Sent
               </EyebrowPill>
             </div>
             <h1 className={styles.title}>
               Enter your 6-digit code
             </h1>
             <p className={styles.subtitle}>
-              We sent a code to <strong className={styles.strongText}>+254 {user?.phone}</strong> and <strong className={styles.strongText}>{user?.email}</strong>.
+              We sent a reset code to <strong className={styles.strongText}>{user?.email}</strong>.
             </p>
           </div>
 
@@ -189,8 +191,8 @@ export const OtpVerification: React.FC = () => {
           </div>
 
           <div className={styles.calloutWrapper}>
-            <InfoCallout icon={<Phone size={15} />}>
-              <strong>Didn't get the code?</strong> Check your spam folder or make sure your phone number is correct and has a cellular signal.
+            <InfoCallout icon={<Mail size={15} />}>
+              <strong>Didn't get the code?</strong> For this demo the code is shown in the on-screen notification when you request it.
             </InfoCallout>
           </div>
         </div>

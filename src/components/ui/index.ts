@@ -8,3 +8,5 @@ export { InfoCallout } from "./InfoCallout";
 export type { InfoCalloutProps } from "./InfoCallout";
 export { Modal } from "./Modal";
 export type { ModalProps } from "./Modal";
+export { RegionSelect } from "./RegionSelect";
+export type { RegionSelectProps, RegionSelectOption } from "./RegionSelect";

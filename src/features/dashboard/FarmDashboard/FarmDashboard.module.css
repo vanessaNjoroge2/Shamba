@@ -55,6 +55,39 @@
   margin-top: 0.25rem;
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.downloadButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1.5px solid var(--shamba-active-highlight-green);
+  background-color: transparent;
+  color: var(--shamba-active-highlight-green);
+  cursor: pointer;
+  min-height: 44px;
+  transition: background-color 0.2s, color 0.2s, transform 0.1s;
+  font-family: var(--shamba-font-body);
+}
+
+.downloadButton:hover {
+  background-color: var(--shamba-active-highlight-green);
+  color: var(--shamba-text-on-dark);
+}
+
+.downloadButton:active {
+  transform: scale(0.98);
+}
+
 .saveButton {
   display: inline-flex;
   align-items: center;
@@ -93,12 +126,47 @@
 }
 
 .card {
-  border-radius: 1rem;
-  padding: 1.5rem;
+  border-radius: 1.25rem;
+  padding: 1.75rem;
   background-color: var(--shamba-mint);
   border: 1.5px solid var(--shamba-sage-border);
   display: flex;
   flex-direction: column;
+  min-height: 360px;
+  box-shadow: 0 8px 24px rgba(22, 60, 45, 0.08);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 14px 32px rgba(22, 60, 45, 0.13);
+  transform: translateY(-2px);
+}
+
+/* Prominent colour-coded health status banner */
+.statusBanner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+}
+
+.statusIconBox {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.6);
+  flex-shrink: 0;
+}
+
+.statusWord {
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: var(--shamba-font-display);
+  line-height: 1;
 }
 
 .pillWrapper {
@@ -377,4 +445,112 @@
 
 .bgDryFill {
   background-color: var(--shamba-dry);
+}
+
+.carbonUnit {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--shamba-primary-dark-green);
+  margin-bottom: 0.25rem;
+}
+
+.carbonDivider {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--shamba-sage-border);
+  margin-bottom: 0.25rem;
+  padding: 0 0.25rem;
+}
+
+.carbonGradeBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  margin-bottom: 0.125rem;
+}
+
+.gradeA {
+  background-color: #D6F0E0;
+  color: var(--shamba-active-highlight-green);
+  border: 1.5px solid var(--shamba-active-highlight-green);
+}
+
+.gradeB {
+  background-color: var(--shamba-ochre-bg);
+  color: var(--shamba-moderate);
+  border: 1.5px solid var(--shamba-moderate);
+}
+
+.gradeC {
+  background-color: #FDEAE6;
+  color: var(--shamba-dry);
+  border: 1.5px solid var(--shamba-dry);
+}
+
+/* Empty state shown when the user reaches the dashboard with no assessment */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 60vh;
+  padding: 2rem 1.25rem;
+  text-align: center;
+}
+
+.emptyIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 9999px;
+  background-color: #D6F0E0;
+  color: var(--shamba-active-highlight-green);
+}
+
+.emptyTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--shamba-primary-dark-green);
+  font-family: var(--shamba-font-display);
+}
+
+.emptyText {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--shamba-muted);
+  max-width: 24rem;
+}
+
+.emptyButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 9999px;
+  border: none;
+  background-color: var(--shamba-active-highlight-green);
+  color: var(--shamba-text-on-dark);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--shamba-font-body);
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.emptyButton:hover {
+  background-color: var(--shamba-primary-dark-green);
+}
+
+.emptyButton:active {
+  transform: scale(0.98);
 }

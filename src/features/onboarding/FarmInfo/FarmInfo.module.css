@@ -127,6 +127,12 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .cropGrid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
 .cropButton {
   display: flex;
   flex-direction: column;
@@ -301,4 +307,106 @@
 
 .calloutWrapper {
   margin-top: 2rem;
+}
+
+/* Region Selector and Soil Metrics display */
+.regionSelect {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  outline: none;
+  background-color: var(--shamba-mint);
+  border: 2px solid var(--shamba-sage-border);
+  color: var(--shamba-primary-dark-green);
+  min-height: 44px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: var(--shamba-font-body);
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%235E7265' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.regionSelect:focus {
+  border-color: var(--shamba-active-highlight-green);
+  box-shadow: 0 0 0 2px rgba(45, 122, 79, 0.15);
+}
+
+.soilGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.soilCard {
+  background-color: var(--shamba-mint-bg);
+  border: 2px solid var(--shamba-sage-border);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.soilLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--shamba-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.soilValue {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--shamba-primary-dark-green);
+  font-family: var(--shamba-font-body);
+}
+
+.soilLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  height: 64px;
+  background-color: var(--shamba-mint);
+  border: 2px dashed var(--shamba-sage-border);
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--shamba-muted);
+}
+
+.soilPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  background-color: var(--shamba-mint);
+  border: 2px dashed var(--shamba-sage-border);
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--shamba-muted);
+  font-style: italic;
+}
+
+.spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2.5px solid var(--shamba-sage-border);
+  border-top-color: var(--shamba-primary-dark-green);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
