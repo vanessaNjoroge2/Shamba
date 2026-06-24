@@ -209,3 +209,29 @@
     color: #ffffff;
   }
 }
+
+/* ── Global print: show only the .printable-report, hide the live app ── */
+.printable-report {
+  display: none;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .printable-report,
+  .printable-report * {
+    visibility: visible;
+  }
+  .printable-report {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 32px 40px;
+    background: #ffffff;
+    color: #2D3B30;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+}

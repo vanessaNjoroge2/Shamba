@@ -55,6 +55,21 @@ export interface FarmInfo {
 }
 
 /**
+ * A snapshot of a farm report the user downloaded/saved, kept as history.
+ */
+export interface SavedReport {
+  id: string;
+  timestamp: string;
+  region: string;
+  cropType: string;
+  farmSize: string;
+  sizeUnit: string;
+  healthStatus: string;
+  carbonEstimate: number;
+  carbonGrade: string;
+}
+
+/**
  * Global App Context state structure.
  */
 export interface AppContextState {
@@ -66,6 +81,7 @@ export interface AppContextState {
   completedStepIds: number[];
   farmInfo: FarmInfo | null;
   saved: boolean; // Indicates if the user saved their farm report, unlocking trend charts
+  savedReports: SavedReport[]; // history of downloaded/saved reports
   assessmentLoading: boolean;
   assessmentError: string | null;
 }

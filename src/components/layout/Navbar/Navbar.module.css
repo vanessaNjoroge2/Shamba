@@ -1,0 +1,287 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  width: 100%;
+  background-color: var(--shamba-primary-dark-green);
+  padding: 0.75rem 1.5rem;
+  font-family: var(--shamba-font-body);
+}
+
+.navContainer {
+  max-width: 80rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* ── Brand (left) ── */
+.brandGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.homeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  color: var(--shamba-mint);
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.homeButton:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.logoLink {
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.logoLink:hover {
+  opacity: 0.85;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--shamba-font-display);
+  color: var(--shamba-mint);
+  letter-spacing: -0.01em;
+}
+
+/* ── Center links (desktop) ── */
+.centerLinks {
+  display: none;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--shamba-sage-border);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.navLink:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--shamba-text-on-dark);
+}
+
+.navLinkActive {
+  background-color: var(--shamba-active-highlight-green);
+  color: var(--shamba-text-on-dark);
+}
+
+/* ── Right group ── */
+.rightGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.profileWrap {
+  position: relative;
+  display: none;
+}
+
+.profileTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.6rem 0.35rem 0.35rem;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(216, 235, 216, 0.25);
+  background-color: transparent;
+  color: var(--shamba-mint);
+  cursor: pointer;
+  font-family: var(--shamba-font-body);
+  transition: background-color 0.2s;
+}
+
+.profileTrigger:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background-color: var(--shamba-active-highlight-green);
+  color: var(--shamba-text-on-dark);
+  font-size: 0.8rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.profileName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  max-width: 9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* ── Dropdown ── */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 12rem;
+  padding: 0.35rem;
+  background-color: var(--shamba-mint);
+  border: 1.5px solid var(--shamba-sage-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 12px 28px rgba(22, 60, 45, 0.22);
+  z-index: 50;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--shamba-primary-dark-green);
+  font-family: var(--shamba-font-body);
+  transition: background-color 0.15s;
+}
+
+.dropdownItem:hover {
+  background-color: var(--shamba-muted-inactive);
+}
+
+.dropdownDivider {
+  height: 1px;
+  margin: 0.35rem 0.25rem;
+  background-color: var(--shamba-sage-border);
+}
+
+.dropdownDanger {
+  color: var(--shamba-dry);
+}
+
+.dropdownDanger:hover {
+  background-color: rgba(196, 75, 43, 0.1);
+}
+
+/* ── Hamburger (mobile) ── */
+.hamburger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: none;
+  color: var(--shamba-mint);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.hamburger:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ── Mobile menu panel ── */
+.mobileMenu {
+  max-width: 80rem;
+  margin: 0.75rem auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(216, 235, 216, 0.18);
+}
+
+.mobileLink {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border: none;
+  border-radius: 0.6rem;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--shamba-sage-border);
+  font-family: var(--shamba-font-body);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.mobileLink:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--shamba-text-on-dark);
+}
+
+.mobileLinkActive {
+  background-color: var(--shamba-active-highlight-green);
+  color: var(--shamba-text-on-dark);
+}
+
+.mobileDivider {
+  height: 1px;
+  margin: 0.4rem 0.5rem;
+  background-color: rgba(216, 235, 216, 0.18);
+}
+
+/* ── Responsive switch ── */
+@media (min-width: 768px) {
+  .centerLinks {
+    display: flex;
+  }
+  .profileWrap {
+    display: block;
+  }
+  .hamburger {
+    display: none;
+  }
+  .mobileMenu {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .navbar {
+    padding: 0.75rem 3rem;
+  }
+}
