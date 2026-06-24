@@ -15,6 +15,25 @@ class Token(BaseModel):
     token_type: str = "bearer"
 
 
+class UserOut(BaseModel):
+    id: int
+    name: str
+    email: EmailStr
+
+    class Config:
+        from_attributes = True
+
+
+class ProfileUpdate(BaseModel):
+    name: str
+    email: EmailStr
+
+
+class PasswordChange(BaseModel):
+    current_password: str
+    new_password: str = Field(min_length=8)
+
+
 # ── Farm assessment ────────────────────────────────────────────────────────────
 
 class FarmInput(BaseModel):

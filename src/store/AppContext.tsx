@@ -4,10 +4,17 @@ import { AppContextState, FarmInfo, User, Step, HealthStatus, SavedReport } from
 import {
   signup as apiSignup,
   login as apiLogin,
+  updateProfile as apiUpdateProfile,
+  changePassword as apiChangePassword,
   assessFarm,
   ApiError,
   FarmAssessmentRequest,
 } from "../lib/api";
+
+export interface ActionResult {
+  ok: boolean;
+  error?: string;
+}
 import { Globe, MapPin, Zap, BarChart2, TrendingUp } from "lucide-react";
 
 /**
@@ -130,6 +137,9 @@ function localRecommendations(info: FarmInfo, health: HealthStatus, carbon: numb
 export interface AppContextType extends AppContextState {
   signupUser: (name: string, email: string, password: string) => Promise<boolean>;
   loginUser: (email: string, password: string) => Promise<boolean>;
+  updateUser: (updates: Partial<User>) => void;
+  updateProfile: (name: string, email: string) => Promise<ActionResult>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<ActionResult>;
   requestPasswordReset: (email: string) => void;
   verifyOtp: (otp: string) => boolean;
   resendOtp: () => void;
@@ -305,6 +315,64 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       toast.message("Offline mode - signed in with a demo session.");
       return true;
     }
+  };
+
+  /**
+   * Updates the signed-in user's profile details (name / email) locally.
+   */
+  const updateUser = (updates: Partial<User>) => {
+    setUser((prev) => (prev ? { ...prev, ...updates } : prev));
+  };
+
+  /**
+   * Updates name + email against the backend when there's a real session,
+   * falling back to a local update when offline. Returns ok:false only when the
+   * server actively rejects it (e.g. the email is already in use).
+   */
+  const updateProfile = async (name: string, email: string): Promise<ActionResult> => {
+    if (authToken) {
+      try {
+        const result = await apiUpdateProfile(authToken, name, email);
+        setUser((prev) => ({ ...(prev ?? {}), name: result.name, email: result.email }));
+        return { ok: true };
+      } catch (err) {
+        const status = err instanceof ApiError ? err.status : undefined;
+        if (status !== undefined) {
+          return { ok: false, error: err instanceof Error ? err.message : "Update failed" };
+        }
+        // Backend unreachable: keep the change locally so the demo continues.
+        setUser((prev) => ({ ...(prev ?? {}), name, email }));
+        return { ok: true };
+      }
+    }
+    setUser((prev) => ({ ...(prev ?? {}), name, email }));
+    return { ok: true };
+  };
+
+  /**
+   * Changes the password against the backend (verifying the current one). When
+   * offline it accepts the change locally so the demo flow isn't blocked.
+   */
+  const changePassword = async (
+    currentPassword: string,
+    newPassword: string
+  ): Promise<ActionResult> => {
+    if (authToken) {
+      try {
+        await apiChangePassword(authToken, currentPassword, newPassword);
+        return { ok: true };
+      } catch (err) {
+        const status = err instanceof ApiError ? err.status : undefined;
+        if (status !== undefined) {
+          return {
+            ok: false,
+            error: err instanceof Error ? err.message : "Current password is incorrect",
+          };
+        }
+        return { ok: true }; // backend unreachable, accept for the demo
+      }
+    }
+    return { ok: true };
   };
 
   /**
@@ -504,6 +572,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         assessmentError,
         signupUser,
         loginUser,
+        updateUser,
+        updateProfile,
+        changePassword,
         requestPasswordReset,
         verifyOtp,
         resendOtp,

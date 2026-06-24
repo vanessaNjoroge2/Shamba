@@ -29,6 +29,47 @@ def signup(user_in: schemas.UserSignup, db: Session = Depends(get_db)):
     return schemas.Token(access_token=token)
 
 
+@router.get("/me", response_model=schemas.UserOut)
+def get_me(current_user: models.User = Depends(auth.get_current_user)):
+    return current_user
+
+
+@router.put("/me", response_model=schemas.UserOut)
+def update_me(
+    data: schemas.ProfileUpdate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user),
+):
+    # Make sure the new email isn't already used by a different account.
+    clash = (
+        db.query(models.User)
+        .filter(models.User.email == data.email, models.User.id != current_user.id)
+        .first()
+    )
+    if clash:
+        raise HTTPException(status_code=400, detail="Email already in use")
+
+    current_user.name = data.name
+    current_user.email = data.email
+    db.commit()
+    db.refresh(current_user)
+    return current_user
+
+
+@router.post("/change-password")
+def change_password(
+    data: schemas.PasswordChange,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user),
+):
+    if not auth.verify_password(data.current_password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+
+    current_user.hashed_password = auth.hash_password(data.new_password)
+    db.commit()
+    return {"detail": "Password updated"}
+
+
 @router.post("/login", response_model=schemas.Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     # OAuth2PasswordRequestForm always uses "username" as the field name —

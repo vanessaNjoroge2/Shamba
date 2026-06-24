@@ -78,6 +78,66 @@ export async function login(
   return response.json();
 }
 
+export interface ProfileResponse {
+  id: number;
+  name: string;
+  email: string;
+}
+
+/** PUT /api/auth/me - update name + email. Requires a Bearer token. */
+export async function updateProfile(
+  token: string,
+  name: string,
+  email: string
+): Promise<ProfileResponse> {
+  let response: Response;
+  try {
+    response = await fetch(`${BASE_URL}/api/auth/me`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name, email }),
+    });
+  } catch {
+    throw new ApiError("Could not reach the server.");
+  }
+  if (!response.ok) {
+    const detail = await readDetail(response);
+    throw new ApiError(detail ?? "Could not update profile", response.status);
+  }
+  return response.json();
+}
+
+/** POST /api/auth/change-password. Requires a Bearer token. */
+export async function changePassword(
+  token: string,
+  currentPassword: string,
+  newPassword: string
+): Promise<void> {
+  let response: Response;
+  try {
+    response = await fetch(`${BASE_URL}/api/auth/change-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        current_password: currentPassword,
+        new_password: newPassword,
+      }),
+    });
+  } catch {
+    throw new ApiError("Could not reach the server.");
+  }
+  if (!response.ok) {
+    const detail = await readDetail(response);
+    throw new ApiError(detail ?? "Could not change password", response.status);
+  }
+}
+
 // ── Farm assessment ───────────────────────────────────────────────────────────
 
 /** Matches backend `schemas.FarmInput` exactly. */

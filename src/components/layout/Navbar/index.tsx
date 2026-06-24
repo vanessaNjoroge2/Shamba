@@ -76,6 +76,12 @@ export const Navbar: React.FC = () => {
     toast.info(`${label} is coming soon.`);
   };
 
+  const goToProfile = () => {
+    setProfileOpen(false);
+    setMobileOpen(false);
+    navigate("/profile");
+  };
+
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `${styles.navLink} ${isActive ? styles.navLinkActive : ""}`;
 
@@ -122,7 +128,7 @@ export const Navbar: React.FC = () => {
 
             {profileOpen && (
               <div className={styles.dropdown} role="menu">
-                <button className={styles.dropdownItem} role="menuitem" onClick={() => comingSoon("My Profile")}>
+                <button className={styles.dropdownItem} role="menuitem" onClick={goToProfile}>
                   <User size={16} /> My Profile
                 </button>
                 <button className={styles.dropdownItem} role="menuitem" onClick={() => comingSoon("Settings")}>
@@ -166,7 +172,7 @@ export const Navbar: React.FC = () => {
             </NavLink>
           ))}
           <div className={styles.mobileDivider} />
-          <button className={styles.mobileLink} onClick={() => comingSoon("My Profile")}>
+          <button className={styles.mobileLink} onClick={goToProfile}>
             <User size={18} /> My Profile
           </button>
           <button className={styles.mobileLink} onClick={() => comingSoon("Settings")}>

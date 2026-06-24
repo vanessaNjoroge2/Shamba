@@ -13,6 +13,7 @@ import {
   DashboardPage,
   SavePage,
   ProgressPage,
+  ProfilePage,
   ErrorPage,
 } from "../pages";
 
@@ -76,6 +77,16 @@ export const AppRoutes: React.FC = () => {
           <ProtectedRoute>
             <AppShell>
               <ProgressPage />
+            </AppShell>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <AppShell>
+              <ProfilePage />
             </AppShell>
           </ProtectedRoute>
         }
