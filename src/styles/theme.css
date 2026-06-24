@@ -198,4 +198,14 @@
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
   }
+
+  /* Keep every native UI accent on the Shamba green theme (no browser blue). */
+  html {
+    accent-color: #2D6A4F;
+  }
+
+  ::selection {
+    background-color: #2D6A4F;
+    color: #ffffff;
+  }
 }

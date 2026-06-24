@@ -9,7 +9,7 @@ import styles from "./AiAnalysis.module.css";
 
 const PHASES = [
   "Locating satellite imagery…",
-  "Calculating NDVI soil index…",
+  "Reading soil and vegetation health…",
   "Cross-referencing rainfall data…",
   "Generating recommendations…",
   "Estimating carbon footprint…",
@@ -127,7 +127,7 @@ export const AiAnalysis: React.FC = () => {
           <InfoCallout icon={<Clock size={15} />}>
             <strong>Did you know?</strong> Shamba analyzes over 40 satellite data
             points per farm, including soil carbon density, cloud-cover adjusted
-            NDVI, and 90-day precipitation trends.
+            vegetation health, and 90-day precipitation trends.
           </InfoCallout>
         </div>
       </div>

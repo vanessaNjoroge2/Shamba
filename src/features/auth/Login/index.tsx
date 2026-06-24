@@ -1,43 +1,49 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import { User, ArrowRight, Info, Sprout } from "lucide-react";
+import { User, ArrowRight, Info, Sprout, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../../hooks";
 import { Button, EyebrowPill, InfoCallout } from "../../../components/ui";
 import farmerPhoto from "../../../assets/african_farmer.jpg";
 import styles from "./Login.module.css";
 
 /**
- * Login component for collecting phone and email, simulating OTP send.
+ * Login component: email + password sign-in. On success the farmer continues
+ * to onboarding. OTP is no longer part of this flow (it now lives in the
+ * forgot-password journey).
  */
 export const Login: React.FC = () => {
-  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSendOtp = (e: React.FormEvent) => {
+  const isValidEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone.trim()) {
-      setError("Phone number is required");
-      return;
-    }
-    if (!email.trim() || !email.includes("@")) {
+    if (!isValidEmail(email)) {
       setError("Please enter a valid email address");
       return;
     }
-    
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+
     setError("");
     setLoading(true);
-    
-    // Simulate API latency
-    setTimeout(() => {
-      setLoading(false);
-      login(phone, email);
-      navigate("/otp");
-    }, 1000);
+    const success = await login(email, password);
+    setLoading(false);
+
+    if (success) {
+      navigate("/onboarding");
+    } else {
+      setError("Invalid email or password");
+    }
   };
 
   return (
@@ -59,14 +65,13 @@ export const Login: React.FC = () => {
             <blockquote className={styles.quote}>
               "The best tool a smallholder farmer has ever had."
             </blockquote>
-            <p className={styles.quoteAuthor}>— Agnes W., Kisii County</p>
+            <p className={styles.quoteAuthor}>Agnes W., Kisii County</p>
           </div>
         </div>
       </div>
 
       {/* Right panel - Form */}
       <div className={styles.formPanel}>
-        {/* Mobile Header */}
         <div className={styles.mobileHeader}>
           <span className={styles.brandLogo}>Shamba</span>
         </div>
@@ -76,37 +81,14 @@ export const Login: React.FC = () => {
             <EyebrowPill>
               <User size={11} /> Welcome Back
             </EyebrowPill>
-            <h1 className={styles.title}>
-              Log in to your farm
-            </h1>
+            <h1 className={styles.title}>Welcome back</h1>
             <p className={styles.subtitle}>
-              Enter your phone number and email address. We will send a 6-digit one-time code to both.
+              Log in to view your farm analysis and recommendations.
             </p>
           </div>
 
-          <form onSubmit={handleSendOtp} className={styles.form}>
+          <form onSubmit={handleSubmit} className={styles.form}>
             {error && <div className={styles.errorMessage}>{error}</div>}
-            
-            {/* Phone */}
-            <div className={styles.inputGroup}>
-              <label htmlFor="phone" className={styles.label}>
-                Phone number
-              </label>
-              <div className={styles.phoneInputWrapper}>
-                <div className={styles.countryCode}>🇰🇪 +254</div>
-                <input
-                  id="phone"
-                  type="tel"
-                  placeholder="712 345 678"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-                  className={styles.phoneInput}
-                  aria-label="Phone number"
-                  autoComplete="tel"
-                  required
-                />
-              </div>
-            </div>
 
             {/* Email */}
             <div className={styles.inputGroup}>
@@ -126,28 +108,73 @@ export const Login: React.FC = () => {
               />
             </div>
 
-            <Button
-              type="submit"
-              disabled={!phone.trim() || !email.trim() || loading}
-              fullWidth
-            >
+            {/* Password */}
+            <div className={styles.inputGroup}>
+              <label htmlFor="password" className={styles.label}>
+                Password
+              </label>
+              <div className={styles.passwordWrapper}>
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={styles.passwordInput}
+                  aria-label="Password"
+                  autoComplete="current-password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((s) => !s)}
+                  className={styles.eyeButton}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <div className={styles.forgotRow}>
+              <button
+                type="button"
+                onClick={() => navigate("/forgot")}
+                className={styles.linkButton}
+              >
+                Forgot password?
+              </button>
+            </div>
+
+            <Button type="submit" disabled={loading} fullWidth>
               {loading ? (
                 <>
                   <span className={styles.spinner} />
-                  Sending code…
+                  Logging in...
                 </>
               ) : (
                 <>
-                  Send One-Time Code <ArrowRight size={17} />
+                  Log In <ArrowRight size={17} />
                 </>
               )}
             </Button>
           </form>
 
+          <p className={styles.switchRow}>
+            Don't have an account?{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/signup")}
+              className={styles.linkButton}
+            >
+              Sign up
+            </button>
+          </p>
+
           <div className={styles.calloutWrapper}>
             <InfoCallout icon={<Info size={15} />}>
-              <strong>No password required.</strong> We send a 6-digit code via
-              SMS and email. Standard rates apply.
+              <strong>New to Shamba?</strong> Create a free account to analyse
+              your farm and track its health over time.
             </InfoCallout>
           </div>
         </div>

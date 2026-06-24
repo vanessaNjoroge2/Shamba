@@ -53,7 +53,7 @@ export const SaveFarm: React.FC = () => {
             <EyebrowPill>Optional Step</EyebrowPill>
             <h1 className={styles.title}>Save your farm report</h1>
             <p className={styles.subtitle}>
-              Get a shareable link and unlock <strong>Historical Trends</strong> — see how your farm's health and carbon score change over time.
+              Get a shareable link and unlock <strong>Historical Trends</strong> - see how your farm's health and carbon score change over time.
             </p>
           </div>
         </div>
@@ -107,7 +107,7 @@ export const SaveFarm: React.FC = () => {
             className={styles.skipButton}
             aria-label="Skip saving and continue to trends"
           >
-            Maybe later — skip this step
+            Maybe later - skip this step
           </button>
         </div>
       </div>

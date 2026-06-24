@@ -209,3 +209,116 @@
     transform: rotate(360deg);
   }
 }
+
+/* ── Password input with show/hide toggle (shared by login/signup/forgot) ── */
+.passwordWrapper {
+  position: relative;
+  display: flex;
+}
+
+.passwordInput {
+  flex: 1;
+  padding: 0 3rem 0 1rem;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  outline: none;
+  background-color: var(--shamba-mint);
+  border: 2px solid var(--shamba-sage-border);
+  color: var(--shamba-primary-dark-green);
+  min-height: 52px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: var(--shamba-font-body);
+}
+
+.passwordInput:focus {
+  border-color: var(--shamba-active-highlight-green);
+  box-shadow: 0 0 0 2px rgba(45, 122, 79, 0.15);
+}
+
+.eyeButton {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  background: none;
+  color: var(--shamba-muted);
+  cursor: pointer;
+  border-radius: 0.5rem;
+}
+
+.eyeButton:hover {
+  color: var(--shamba-primary-dark-green);
+}
+
+/* Inline field-level error message */
+.fieldError {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--shamba-dry);
+}
+
+/* Forgot-password link aligned to the right of the password field */
+.forgotRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -0.5rem;
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--shamba-active-highlight-green);
+  cursor: pointer;
+  font-family: var(--shamba-font-body);
+}
+
+.linkButton:hover {
+  color: var(--shamba-primary-dark-green);
+  text-decoration: underline;
+}
+
+/* Footer line: "Don't have an account? Sign up" */
+.switchRow {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--shamba-muted);
+  font-family: var(--shamba-font-body);
+}
+
+/* Branding panel illustration (CSS-only leaf/field, no image files) */
+.leafField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.leafField::before,
+.leafField::after {
+  content: "";
+  position: absolute;
+  bottom: -40%;
+  left: 50%;
+  width: 140%;
+  height: 80%;
+  transform: translateX(-50%);
+  border-radius: 50% 50% 0 0;
+  background: radial-gradient(circle at 50% 100%, rgba(45, 122, 79, 0.5), transparent 70%);
+}
+
+.leafField::after {
+  bottom: -55%;
+  width: 110%;
+  background: radial-gradient(circle at 50% 100%, rgba(216, 235, 216, 0.18), transparent 70%);
+}
